@@ -17,6 +17,10 @@ int sc_memorySet(int address, int value)
     {
         return -1;
     }
+    if ((value < 0) || (value > 99))
+    {
+        return -1;
+    }
     sc_memory[address] = value;
     return 0;
 }
@@ -78,9 +82,9 @@ int sc_regSet(int flag, int value)
     printf("%d\n", registr);
     return 0;
 }
-int sc_regGet(int flag, int *value)
-{
-    if ((flag < 1) || (flag > 5))
+int sc_regGet(int flag, int *value) //0b 0/1 0 1000101 0100110
+{                                   // a  0  0 1111111 0000000 -> >> 7
+    if ((flag < 1) || (flag > 5))   // b  0  0 0000000 1111111
     {
         return -1;
     }
@@ -88,8 +92,43 @@ int sc_regGet(int flag, int *value)
     {
         *value = 1;
     }
-    *value = 0;
+    else
+    {
+        *value = 0;
+    }
     printf("%d\n", registr);
     return 0;
 }
-//int sc_commandEncode(int command, int operand, int *value) int sc_commandDecode(int value, int *command, int *operand) * /
+int sc_commandEncode(int command, int operand, int *value)
+{
+    if ((command > 99) || (command < 0)) 
+    {
+        return -1;
+    }
+    if ((operand > 99) || (operand < 0)) 
+    {
+        return -1;
+    }
+    command  = command << 7;
+    *value = command + operand;
+    return 0 ;
+} 
+int sc_commandDecode(int value, int *command, int *operand)
+{
+    short codeMask = 0b0011111110000000;
+    short operandMask = 0b0000000001111111;
+    int temp = (codeMask  & value) >> 7;
+    if ((temp > 99) || (temp < 0)) 
+    {
+        return -1;
+    }
+    int temp1 = temp;
+    temp = operandMask & value;
+    if ((temp > 99) || (temp < 0)) 
+    {
+        return -1;
+    }
+    *command = temp1;
+    *operand = temp;
+    return 0; 
+}

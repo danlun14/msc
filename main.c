@@ -3,7 +3,7 @@
 
 int main()
 {
-    int tempValue = 0;
+    int tempValue = 0b0010000010011111;
     int tempReg = 0;
     sc_regInit();
     sc_memorySet(3, 15);
@@ -27,4 +27,9 @@ int main()
     printf("%d\n", tempReg);
     sc_regGet(5, &tempReg);
     printf("%d\n", tempReg);
+    sc_commandEncode(99,99,&tempValue);
+    printf("%d\n", tempValue);
+    sc_commandDecode(tempValue,&tempReg,&tempValue);
+    printf("%d\n", tempReg);
+    printf("%d\n", tempValue);
 }
