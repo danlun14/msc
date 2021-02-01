@@ -25,6 +25,6 @@ int main()
     printf("%d\n", tempReg);
     sc_regGet(3, &tempReg);
     printf("%d\n", tempReg);
-    sc_regGet(5, &tempReg);
+    sc_regGet(4, &tempReg);
     printf("%d\n", tempReg);
 }

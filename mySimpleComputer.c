@@ -17,6 +17,10 @@ int sc_memorySet(int address, int value)
     {
         return -1;
     }
+    if ((value < 0) || (value > 9999))
+    {
+        return -1;
+    }
     sc_memory[address] = value;
     return 0;
 }
@@ -78,9 +82,9 @@ int sc_regSet(int flag, int value)
     printf("%d\n", registr);
     return 0;
 }
-int sc_regGet(int flag, int *value)
-{
-    if ((flag < 1) || (flag > 5))
+int sc_regGet(int flag, int *value) //0b 0/1 0 1000101 0100110
+{                                   // a  0  0 1111111 0000000 -> >> 7
+    if ((flag < 1) || (flag > 5))   // b  0  0 0000000 1111111
     {
         return -1;
     }
@@ -88,7 +92,10 @@ int sc_regGet(int flag, int *value)
     {
         *value = 1;
     }
-    *value = 0;
+    else
+    {
+        *value = 0;
+    }
     printf("%d\n", registr);
     return 0;
 }
