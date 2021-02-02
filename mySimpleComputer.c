@@ -17,7 +17,11 @@ int sc_memorySet(int address, int value)
     {
         return -1;
     }
+
     if ((value < 0) || (value > 99))
+
+    if ((value < 0) || (value > 99))
+
     {
         return -1;
     }
