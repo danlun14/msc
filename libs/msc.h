@@ -1,5 +1,5 @@
-#ifndef MYSIMPLECOMPUTER_H
-#define MYSIMPLECOMPUTER_H
+#ifndef MSC_H
+#define MSC_H
 
 #include <stdio.h>
 

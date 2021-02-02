@@ -1,4 +1,4 @@
-#include "mySimpleComputer.h"
+#include "msc.h"
 #include <stdio.h>
 
 int main()

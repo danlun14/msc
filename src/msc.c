@@ -1,4 +1,4 @@
-#include "mySimpleComputer.h"
+#include "msc.h"
 
 short sc_memory[100];
 short registr;
