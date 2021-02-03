@@ -1,5 +1,5 @@
-#include "msc.h"
-
+#include "/home/danila/study/ACS/msc/libs/msc.h"
+//
 short sc_memory[100];
 short registr;
 

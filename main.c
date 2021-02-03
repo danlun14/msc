@@ -1,4 +1,4 @@
-#include "msc.h"
+#include "libs/msc.h"
 #include <stdio.h>
 
 int main()
