@@ -75,7 +75,6 @@ int sc_regSet(int flag, int value)
     {
         return -1;
     }
-    printf("%d\n", registr);
     return 0;
 }
 int sc_regGet(int flag, int *value) //0b 0/1 0 1000101 0100110
@@ -92,19 +91,22 @@ int sc_regGet(int flag, int *value) //0b 0/1 0 1000101 0100110
     {
         *value = 0;
     }
-    printf("%d\n", registr);
     return 0;
 }
 int sc_commandEncode(int command, int operand, int *value)
 {
-    if ((command > 99) || (command < 0)) 
+    if ((command >= 99) || (command < 0)) 
     {
+        sc_regSet(P,1);
         return -1;
+	
     }
-    if ((operand > 99) || (operand < 0)) 
+    if((operand >= 99) || (operand < 0))
     {
-        return -1;
+    sc_regSet(P,1);
+    return -1;
     }
+    
     command  = command << 7;
     *value = command + operand;
     return 0 ;
@@ -123,6 +125,7 @@ int sc_commandDecode(int value, int *command, int *operand)
     int temp = (codeMask  & value) >> 7;
     if ((temp > 99) || (temp < 0)) 
     {
+	sc_regSet(P,1);
         return -1;
     }
     int temp1 = temp;
