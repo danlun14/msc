@@ -12,12 +12,12 @@ int main()
     sc_memoryInit();
     sc_memoryGet(3, &tempValue);
     printf("%d\n", tempValue);
-    sc_memorySave("text.txt");
+    sc_memorySave("memory.bin");
     sc_memorySet(3, 15);
-    sc_memoryLoad("text.txt");
+    sc_memoryLoad("memory.bin");
     sc_memoryGet(3, &tempValue);
     printf("%d\n", tempValue);
-
+    printf("\nreg:\n");
     sc_regSet(2, 1);
     sc_regSet(3, 1);
     sc_regSet(5, 1);
@@ -26,8 +26,8 @@ int main()
     sc_regGet(3, &tempReg);
     printf("%d\n", tempReg);
     sc_regGet(4, &tempReg);
-    printf("%d\n", tempReg);
-    sc_commandEncode(99,99,&tempValue);
+    printf("\ncode/encode\n");
+    sc_commandEncode(1,99,&tempValue);
     printf("%d\n", tempValue);
     sc_commandDecode(tempValue,&tempReg,&tempValue);
     printf("%d\n", tempReg);

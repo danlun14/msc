@@ -1,4 +1,4 @@
-#include "/home/danila/study/ACS/msc/libs/msc.h"
+#include "/home/students/2019/iv922s14/labs/msc/libs/msc.h"
 //
 short sc_memory[100];
 short registr;
@@ -13,15 +13,7 @@ int sc_memoryInit()
 }
 int sc_memorySet(int address, int value)
 {
-    if ((address > 99) && (address < 0))
-    {
-        return -1;
-    }
-
-    if ((value < 0) || (value > 99))
-
-    if ((value < 0) || (value > 99))
-
+    if ((address >= 99) || (address < 0))
     {
         return -1;
     }
@@ -119,8 +111,15 @@ int sc_commandEncode(int command, int operand, int *value)
 } 
 int sc_commandDecode(int value, int *command, int *operand)
 {
+    short checkMask = 0b0100000000000000;
     short codeMask = 0b0011111110000000;
     short operandMask = 0b0000000001111111;
+    
+    if ((checkMask & value)== 0){
+	sc_regSet(E,1);
+	return -1;
+    }
+    
     int temp = (codeMask  & value) >> 7;
     if ((temp > 99) || (temp < 0)) 
     {

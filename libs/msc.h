@@ -3,11 +3,11 @@
 
 #include <stdio.h>
 
-#define P 1;
-#define O 2;
-#define M 3;
-#define T 4;
-#define E 5;
+#define P 1
+#define O 2
+#define M 3
+#define T 4
+#define E 5
 
 
 
