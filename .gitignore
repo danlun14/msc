@@ -1,5 +1,8 @@
 text.txt
+comp.txt
 .vscode
 *.exe
 main
-objectsrc/msc.o
+objectsrc/*.o
+libsrc/libs/*.a
+lab2

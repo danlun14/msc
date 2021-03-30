@@ -1,11 +1,23 @@
-all: main
+OBJ_DIR := objectsrc
+SRC_DIR := libsrc
+SRC := $(wildcard $(SRC_DIR)/*.c)
+OBJ := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
+all: lab2 main
 
-main: main.c libs/libmsc.a
-	gcc main.c -o main -lmsc -Llibs
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	gcc -c -o $@  $<
 
-libs/libmsc.a: objectsrc/msc.o
-	ar rc libs/libmsc.a objectsrc/msc.o
+lab2: lab2.c libsrc/libs/libmyTerminal.a libsrc/libs/libbigChars.a
+	gcc lab2.c -o lab2 -lmyTerminal -lbigChars -Llibsrc/libs 
 
-objectsrc/msc.o: libsrc/msc.c
-	gcc -c -o objectsrc/msc.o libsrc/msc.c
+main: main.c libsrc/libs/libmemory.a libsrc/libs/libmyTerminal.a libsrc/libs/libbigChars.a
+	gcc main.c -o main -lmemory -lmyTerminal -lbigChars -Llibsrc/libs 
 
+libsrc/libs/libmemory.a: objectsrc/memory.o
+	ar rc libsrc/libs/libmemory.a objectsrc/memory.o
+
+libsrc/libs/libmyTerminal.a: objectsrc/myTerminal.o
+	ar rc libsrc/libs/libmyTerminal.a objectsrc/myTerminal.o
+
+libsrc/libs/libbigChars.a: objectsrc/bigChars.o
+	ar rc libsrc/libs/libbigChars.a objectsrc/bigChars.o
