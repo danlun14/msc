@@ -7,7 +7,7 @@ int sc_memoryInit()
 {
     for (int i = 0; i < 100; i++)
     {
-        sc_memory[i] = 0;
+        sc_memory[i] = 0b0100000000000000;
     }
     return 0;
 }
@@ -113,7 +113,7 @@ int sc_commandEncode(int command, int operand, int *value)
     }
 
     command = command << 7;
-    *value = command + operand;
+    *value = (command + operand) | 0b0100000000000000;
     return 0;
 }
 int sc_commandDecode(int value, int *command, int *operand)

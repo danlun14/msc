@@ -5,60 +5,81 @@
 
 int main()
 {
-    int tempValue = 0b0010000010011111;
-    int tempReg = 0;
-    sc_regInit();
-    for (int i = 0; i < 100; i++)
-    {
-        sc_memoryGet(i, &tempValue);
-        printf("%d", tempValue);
-    }
-    printf("\n");
-    sc_memorySet(98, 115);
-    for (int i = 0; i < 100; i++)
-    {
-        sc_memoryGet(i, &tempValue);
-        printf("%d", tempValue);
-    }
-    sc_memoryInit();
-    sc_memoryGet(3, &tempValue);
-    printf("%d\n", tempValue);
-    sc_memorySave("memory.bin");
-    sc_memorySet(3, 15);
-    sc_memoryLoad("memory.bin");
-    sc_memoryGet(3, &tempValue);
-    printf("%d\n", tempValue);
-    printf("\nreg:\n\n");
-    sc_regGet(P, &tempReg);
-    printf("%d\n", tempReg);
-    sc_regGet(O, &tempReg);
-    printf("%d\n", tempReg);
-    sc_regGet(M, &tempReg);
-    printf("%d\n", tempReg);
-    sc_regGet(T, &tempReg);
-    printf("%d\n", tempReg);
-    sc_regGet(E, &tempReg);
-    printf("%d\n", tempReg);
-    printf("\ncode/encode\n");
-    sc_commandEncode(10, 15, &tempValue);
-    //sc_commandDecode(100000,&tempValue,&tempReg);
+    mt_clrscr();
 
-    sc_regGet(P, &tempReg);
-    printf("\n%d\n", tempReg);
-    sc_regGet(O, &tempReg);
-    printf("%d\n", tempReg);
-    sc_regGet(M, &tempReg);
-    printf("%d\n", tempReg);
-    sc_regGet(T, &tempReg);
-    printf("%d\n", tempReg);
-    sc_regGet(E, &tempReg);
-    printf("%d\n\n", tempReg);
-    sc_commandDecode(tempValue, &tempReg, &tempValue);
-    printf("%d\n", tempReg);
-    printf("%d\n", tempValue);
+    sc_regInit();
+    sc_memoryInit();
+
+    sc_regSet(P, 1);
+    sc_regSet(M, 1);
+
     mt_setbgcolor(white);
     mt_setfgcolor(black);
+    if (bc_box(63, 7, 84, 10) != 0)
+    {
+        return 1;
+    }
+
+    mt_gotoXY(7, 69);
+    printf("Operation");
+
+    mt_gotoXY(8, 69);
+    //printf("+ %02d : %02d\n", command, operand);
+    if (bc_box(63, 4, 84, 7) != 0)
+    {
+        return 1;
+    }
+
+    mt_gotoXY(4, 64);
+    printf("InstructionCounter");
+    mt_gotoXY(5, 70);
+    //printf("+%04d", instCount);
+    if (bc_box(63, 1, 84, 4) != 0)
+    {
+        return 1;
+    }
+
+    mt_gotoXY(1, 68);
+    printf("Accumulator");
+    mt_gotoXY(2, 70);
+    int accum = 1323;
+    if (accum < 65536)
+    {
+        int tmp = accum;
+        if (tmp >= 0)
+        {
+            printf("+%04X", tmp);
+        }
+        else
+        {
+            printf("-%04X", tmp * -1);
+        }
+    }
+    if (bc_box(1, 1, 63, 13) != 0)
+    {
+        return 1;
+    }
+
+    mt_gotoXY(1, 28);
+    printf("Memory");
     bc_box(1, 13, 63, 23);
+    mt_gotoXY(23, 0);
+    int command = 0, operand = 0, value = 0, temp = 1;
+    sc_commandEncode(0x32, 0x33, &value);
+    sc_memorySet(15, value);
+    sc_memoryGet(15, &temp);
+    sc_commandDecode(temp, &command, &operand);
+    printf("%d %02d %02d", temp, command, operand);
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            sc_memoryGet(i * 10 + j, &value);
+            sc_commandDecode(value, &command, &operand);
+            mt_gotoXY(2 + i, 2 + 6 * j);
+            printf("+%02d%02d\n", command, operand);
+        }
+    }
 
     int chr[2];
     chr[0] = bigMinus(0);
@@ -80,6 +101,8 @@ int main()
     chr[0] = bigNine(0);
     chr[1] = bigNine(1);
     bc_printbigchar(chr, 52, 14, black, white);
+    mt_setbgcolor(white);
+    mt_setfgcolor(black);
     if (bc_box(63, 13, 84, 23) != 0)
     {
         return 1;
@@ -109,15 +132,17 @@ int main()
     mt_gotoXY(10, 71);
     printf("Flags");
     mt_gotoXY(11, 64);
-    int _OD;
-    sc_regGet(P, &_OD);
-    int _DE;
-    sc_regGet(O, &_DE);
-    int _EG;
-    sc_regGet(M, &_EG);
-    int _CI;
-    sc_regGet(T, &_CI);
-    int _IC;
-    sc_regGet(E, &_IC);
-    printf("D-%d E-%d G-%d I-%d C-%d", _OD, _DE, _EG, _CI, _IC);
+    int _P;
+    sc_regGet(P, &_P);
+    int _O;
+    sc_regGet(O, &_O);
+    int _M;
+    sc_regGet(M, &_M);
+    int _T;
+    sc_regGet(T, &_T);
+    int _E;
+    sc_regGet(E, &_E);
+    printf("P-%d O-%d M-%d T-%d E-%d", _P, _O, _M, _T, _E);
+    printf("\E[0m");
+    mt_gotoXY(24, 0);
 }
