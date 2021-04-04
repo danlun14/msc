@@ -8,13 +8,13 @@
 //a f g i j k l m n o p q r s t u v w x y z { | } ~
 //▒ ° ± ␋ ┘ ┐ ┌ └ ┼ ⎺ ⎻ ─ ⎼ ⎽ ├ ┤ ┴ ┬ │ ≤ ≥ π ≠ £ ·
 
-#define bc_cornerUpLeft 'l'
-#define bc_cornerDownLeft 'm'
-#define bc_cornerUpRight 'k'
-#define bc_cornerDownRight 'j'
+#define bc_cornerTopLeft 'l'
+#define bc_cornerBottomLeft 'm'
+#define bc_cornerTopRight 'k'
+#define bc_cornerBottomRight 'j'
 #define bc_horizontaleLine 'q'
 #define bc_verticalLine 'x'
-#define bc_shadedCell 'a'
+#define bc_filledCell 'a'
 
 int bc_printA(char *str);
 int bc_box(int x1, int y1, int x2, int y2);

@@ -36,14 +36,14 @@ int bc_box(int x1, int y1, int x2, int y2)
     {
         if (i == 0)
         {
-            printf("%c", bc_cornerUpLeft);
+            printf("%c", bc_cornerTopLeft);
 
             for (int j = 1; j < x - 2; j++)
             {
                 printf("%c", bc_horizontaleLine);
             }
 
-            printf("%c", bc_cornerUpRight);
+            printf("%c", bc_cornerTopRight);
 
             printf("\n");
             continue;
@@ -65,14 +65,14 @@ int bc_box(int x1, int y1, int x2, int y2)
         {
             mt_gotoXY(y1 + i, x1);
 
-            printf("%c", bc_cornerDownLeft);
+            printf("%c", bc_cornerBottomLeft);
 
             for (int j = 1; j < x - 2; j++)
             {
                 printf("%c", bc_horizontaleLine);
             }
 
-            printf("%c", bc_cornerDownRight);
+            printf("%c", bc_cornerBottomRight);
 
             printf("\n");
         }
@@ -106,8 +106,7 @@ int bc_printbigchar(int *a, int x, int y, enum colors fg, enum colors bg)
             {
                 if ((a[k] >> (i * 8 + j)) & 1)
                 {
-                    printf("%c", bc_shadedCell);
-                    //printf("f");
+                    printf("%c", bc_filledCell);
                 }
                 else
                 {
@@ -230,7 +229,7 @@ int bc_bigcharread(int fd, int *big, int need_count, int *count)
     return 0;
 }
 
-long bigNull(x)
+long bigNull(int x)
 {
     if (x == 0)
     {
@@ -238,7 +237,7 @@ long bigNull(x)
     }
     return 8283750;
 }
-long bigOne(x)
+long bigOne(int x)
 {
     if (x == 0)
     {
@@ -246,7 +245,7 @@ long bigOne(x)
     }
     return 3938328;
 }
-long bigTwo(x)
+long bigTwo(int x)
 {
     if (x == 0)
     {
@@ -254,7 +253,7 @@ long bigTwo(x)
     }
     return 3935292;
 }
-long bigThree(x)
+long bigThree(int x)
 {
     if (x == 0)
     {
@@ -262,7 +261,7 @@ long bigThree(x)
     }
     return 8282238;
 }
-long bigFour(x)
+long bigFour(int x)
 {
     if (x == 0)
     {
@@ -270,7 +269,7 @@ long bigFour(x)
     }
     return 6316158;
 }
-long bigFive(x)
+long bigFive(int x)
 {
     if (x == 0)
     {
@@ -278,7 +277,7 @@ long bigFive(x)
     }
     return 8273984;
 }
-long bigSix(x)
+long bigSix(int x)
 {
     if (x == 0)
     {
@@ -286,7 +285,7 @@ long bigSix(x)
     }
     return 8274558;
 }
-long bigSeven(x)
+long bigSeven(int x)
 {
     if (x == 0)
     {
@@ -294,7 +293,7 @@ long bigSeven(x)
     }
     return 396312;
 }
-long bigEight(x)
+long bigEight(int x)
 {
     if (x == 0)
     {
@@ -302,7 +301,7 @@ long bigEight(x)
     }
     return 8283750;
 }
-long bigNine(x)
+long bigNine(int x)
 {
     if (x == 0)
     {
@@ -310,7 +309,7 @@ long bigNine(x)
     }
     return 8282208;
 }
-long bigA(x)
+long bigA(int x)
 {
     if (x == 0)
     {
@@ -318,7 +317,7 @@ long bigA(x)
     }
     return 6710910;
 }
-long bigB(x)
+long bigB(int x)
 {
     if (x == 0)
     {
@@ -326,7 +325,7 @@ long bigB(x)
     }
     return 4080194;
 }
-long bigC(x)
+long bigC(int x)
 {
     if (x == 0)
     {
@@ -334,7 +333,7 @@ long bigC(x)
     }
     return 8274434;
 }
-long bigD(x)
+long bigD(int x)
 {
     if (x == 0)
     {
@@ -342,7 +341,7 @@ long bigD(x)
     }
     return 4080194;
 }
-long bigE(x)
+long bigE(int x)
 {
     if (x == 0)
     {
@@ -350,7 +349,7 @@ long bigE(x)
     }
     return 8258050;
 }
-long bigF(x)
+long bigF(int x)
 {
     if (x == 0)
     {
@@ -358,7 +357,7 @@ long bigF(x)
     }
     return 131646;
 }
-long bigPlus(x)
+long bigPlus(int x)
 {
     if (x == 0)
     {
@@ -366,7 +365,7 @@ long bigPlus(x)
     }
     return 1579134;
 }
-long bigMinus(x)
+long bigMinus(int x)
 {
     if (x == 0)
     {
