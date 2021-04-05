@@ -6,85 +6,81 @@
 
 int intToHex(int number, char *str)
 {
-	if (!str || number >= 65535 || number < 0) {
-		return 1;
-	}
+    if (!str || number >= 65535 || number < 0)
+    {
+        return 1;
+    }
 
-	for (int i = 0; i < 5; i++) {
-		str[i] = 0;
-	}
+    for (int i = 0; i < 5; i++)
+    {
+        str[i] = 0;
+    }
+    int firstChar = 0b0011100000000000;
+    int secondChar = 0b0000011110000000;
+    int thirdChar = 0b0000000001110000;
+    int fourChar = 0b0000000000001111;
+    int whole = number;
+    int nums[4];
+    nums[0] = (firstChar & number) >> 11;
+    nums[1] = (secondChar & number) >> 7;
+    nums[2] = (thirdChar & number) >> 4;
+    nums[3] = (fourChar & number);
+    int i;
 
-	int remainder;
-	int whole = number;
-	int i;
+    for (i = 3; i > -1; i--)
+    {
 
-	for (i = 0; whole >= 16; i++) {
-		remainder = whole % 16;
-		whole = whole / 16;
-		if (remainder == 10) {
-			str[i] = 'A';
-		} else if (remainder == 11) {
-			str[i] = 'B';
-		} else if (remainder == 12) {
-			str[i] = 'C';
-		} else if (remainder == 13) {
-			str[i] = 'D';
-		} else if (remainder == 14) {
-			str[i] = 'E';
-		} else if (remainder == 15) {
-			str[i] = 'F';
-		} else {
-			str[i] = remainder + 48;
-		}
-	}
-
-
-	if (whole != 0) {
-		if (whole == 10) {
-			str[i] = 'A';
-		} else if (whole == 11) {
-			str[i] = 'B';
-		} else if (whole == 12) {
-			str[i] = 'C';
-		} else if (whole == 13) {
-			str[i] = 'D';
-		} else if (whole == 14) {
-			str[i] = 'E';
-		} else if (whole == 15) {
-			str[i] = 'F';
-		} else {
-			str[i] = whole + 48;
-		}
-	}
-		
-	printf("???%s",str);
-	return 0;
+        if (nums[i] == 10)
+        {
+            str[i] = 'A';
+        }
+        else if (nums[i] == 11)
+        {
+            str[i] = 'B';
+        }
+        else if (nums[i] == 12)
+        {
+            str[i] = 'C';
+        }
+        else if (nums[i] == 13)
+        {
+            str[i] = 'D';
+        }
+        else if (nums[i] == 14)
+        {
+            str[i] = 'E';
+        }
+        else if (nums[i] == 15)
+        {
+            str[i] = 'F';
+        }
+        else
+        {
+            str[i] = nums[i] + 48;
+        }
+    }
+    return 0;
 }
-
 
 int main()
 {
     mt_clrscr();
 
-    
     sc_regInit();
     sc_memoryInit();
-
-    sc_regSet(P, 1);
-    sc_regSet(M, 1);
 
     mt_setbgcolor(white);
     mt_setfgcolor(black);
 
     int cell = 0;
-    char hexStr1[3]="ss";
-    char hexStr2[3] = "ss";
+
+    //////////////////////////////////////////che???????
     // while (1){
     if (bc_box(63, 7, 84, 10) != 0)
     {
         return 1;
     }
-    
+
     mt_gotoXY(7, 69);
     printf("Operation");
 
@@ -107,7 +103,7 @@ int main()
     mt_gotoXY(1, 68);
     printf("Accumulator");
     mt_gotoXY(2, 70);
-    int accum = 23332&0b1011111111111111;
+    int accum = 22835 & 0b1011111111111111;
     if (accum < 65536)
     {
         int tmp = accum;
@@ -129,15 +125,19 @@ int main()
     printf("Memory");
     bc_box(1, 13, 63, 23);
     mt_gotoXY(23, 0);
-    
+
     int command = 0, operand = 0, value = 0, temp = 1;
     sc_commandEncode(0x32, 0x33, &value);
     sc_memorySet(15, value);
     sc_memoryGet(15, &temp);
+    printf("%d   ", temp);
     sc_commandDecode(temp, &command, &operand);
-    intToHex(command, hexStr1);
-    intToHex(operand, hexStr2);
-    printf("%d|%02X %02X|%s;%s", temp, command, operand, hexStr1,hexStr2);
+    char eprst[2];
+
+    char cellStr[3]; //ржака
+    char operandStr[3];
+    intToHex(temp, cellStr);
+    printf("%d |%02X %02X| %s", temp, command, operand, cellStr);
     for (int i = 0; i < 10; i++)
     {
         for (int j = 0; j < 10; j++)
@@ -145,7 +145,7 @@ int main()
             sc_memoryGet(i * 10 + j, &value);
             sc_commandDecode(value, &command, &operand);
             mt_gotoXY(2 + i, 2 + 6 * j);
-            printf("+%02d%02d\n", command, operand);
+            printf("+%02X%02X\n", command, operand);
         }
     }
 
@@ -213,5 +213,4 @@ int main()
     printf("P-%d O-%d M-%d T-%d E-%d", _P, _O, _M, _T, _E);
     printf("\E[0m");
     mt_gotoXY(24, 0);
-    
 }
