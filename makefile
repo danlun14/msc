@@ -2,13 +2,13 @@ OBJ_DIR := objectsrc
 SRC_DIR := libsrc
 SRC := $(wildcard $(SRC_DIR)/*.c)
 OBJ := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
-all: lab2 main
+all: lab3 main
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	gcc -c -o $@  $<
 
-lab2: lab2.c libsrc/libs/libmyTerminal.a libsrc/libs/libbigChars.a
-	gcc lab2.c -o lab2 -lmyTerminal -lbigChars -Llibsrc/libs 
+lab3: lab3.c libsrc/libs/libmyTerminal.a libsrc/libs/libbigChars.a
+	gcc lab3.c -o lab3 -lmyTerminal -lbigChars -Llibsrc/libs 
 
 main: main.c libsrc/libs/libmemory.a libsrc/libs/libmyTerminal.a libsrc/libs/libbigChars.a
 	gcc main.c -o main -lmemory -lmyTerminal -lbigChars -Llibsrc/libs 

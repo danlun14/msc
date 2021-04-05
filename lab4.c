@@ -12,18 +12,16 @@ int main(void)
     char buf[6] = {0};
 
     //char buf[200]; /* Открываем файл для терминала2 на запись*/
-    fd = open("/dev/pts/1", O_WRONLY);
+    fd = open("/dev/pts/2", O_WRONLY);
     printf("fd = %d\n", fd);
     if (fd == -1)
     {
         fprintf(stderr, "Ошибка открытия терминала.\n");
         return (1);
     } /* Читаем  с  клавиатуры  последовательность  символов  ивыводимих на терминал 2*/
-    read(STDIN_FILENO, buf, 6);
-    while (buf[0] != 'q')
-    {
-        read(STDIN_FILENO, buf, 6);
-    }
+    
+        read(1, buf, 6);
+    
 
     //if ((read_chars = read(0, buf, 199)) > 0)
     //{

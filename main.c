@@ -2,11 +2,71 @@
 #include "libsrc/libs/myTerminal.h"
 #include <stdio.h>
 #include "libsrc/libs/bigChars.h"
+#include "libsrc/libs/myReadKey.h"
+
+int intToHex(int number, char *str)
+{
+	if (!str || number >= 65535 || number < 0) {
+		return 1;
+	}
+
+	for (int i = 0; i < 5; i++) {
+		str[i] = 0;
+	}
+
+	int remainder;
+	int whole = number;
+	int i;
+
+	for (i = 0; whole >= 16; i++) {
+		remainder = whole % 16;
+		whole = whole / 16;
+		if (remainder == 10) {
+			str[i] = 'A';
+		} else if (remainder == 11) {
+			str[i] = 'B';
+		} else if (remainder == 12) {
+			str[i] = 'C';
+		} else if (remainder == 13) {
+			str[i] = 'D';
+		} else if (remainder == 14) {
+			str[i] = 'E';
+		} else if (remainder == 15) {
+			str[i] = 'F';
+		} else {
+			str[i] = remainder + 48;
+		}
+	}
+
+
+	if (whole != 0) {
+		if (whole == 10) {
+			str[i] = 'A';
+		} else if (whole == 11) {
+			str[i] = 'B';
+		} else if (whole == 12) {
+			str[i] = 'C';
+		} else if (whole == 13) {
+			str[i] = 'D';
+		} else if (whole == 14) {
+			str[i] = 'E';
+		} else if (whole == 15) {
+			str[i] = 'F';
+		} else {
+			str[i] = whole + 48;
+		}
+	}
+		
+	printf("???%s",str);
+	return 0;
+}
+
 
 int main()
 {
     mt_clrscr();
 
+    
     sc_regInit();
     sc_memoryInit();
 
@@ -15,11 +75,16 @@ int main()
 
     mt_setbgcolor(white);
     mt_setfgcolor(black);
+
+    int cell = 0;
+    char hexStr1[3]="ss";
+    char hexStr2[3] = "ss";
+    // while (1){
     if (bc_box(63, 7, 84, 10) != 0)
     {
         return 1;
     }
-
+    
     mt_gotoXY(7, 69);
     printf("Operation");
 
@@ -42,7 +107,7 @@ int main()
     mt_gotoXY(1, 68);
     printf("Accumulator");
     mt_gotoXY(2, 70);
-    int accum = 1323;
+    int accum = 23332&0b1011111111111111;
     if (accum < 65536)
     {
         int tmp = accum;
@@ -64,12 +129,15 @@ int main()
     printf("Memory");
     bc_box(1, 13, 63, 23);
     mt_gotoXY(23, 0);
+    
     int command = 0, operand = 0, value = 0, temp = 1;
     sc_commandEncode(0x32, 0x33, &value);
     sc_memorySet(15, value);
     sc_memoryGet(15, &temp);
     sc_commandDecode(temp, &command, &operand);
-    printf("%d %02d %02d", temp, command, operand);
+    intToHex(command, hexStr1);
+    intToHex(operand, hexStr2);
+    printf("%d|%02X %02X|%s;%s", temp, command, operand, hexStr1,hexStr2);
     for (int i = 0; i < 10; i++)
     {
         for (int j = 0; j < 10; j++)
@@ -145,4 +213,5 @@ int main()
     printf("P-%d O-%d M-%d T-%d E-%d", _P, _O, _M, _T, _E);
     printf("\E[0m");
     mt_gotoXY(24, 0);
+    
 }
