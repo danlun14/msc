@@ -25,6 +25,7 @@ int bc_bigcharwrite(int fd, int *big, int count);
 int bc_bigcharread(int fd, int *big, int need_count, int *count);
 
 long bigNull(int x);
+long bigOne(int x);
 long bigTwo(int x);
 long bigThree(int x);
 long bigFour(int x);
@@ -41,4 +42,6 @@ long bigE(int x);
 long bigF(int x);
 long bigPlus(int x);
 long bigMinus(int x);
+
+int intToHex(int number, char *str);
 #endif

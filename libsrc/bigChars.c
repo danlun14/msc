@@ -373,3 +373,61 @@ long bigMinus(int x)
     }
     return 126;
 }
+
+int intToHex(int number, char *str)
+{
+    if (!str || number >= 65535 || number < 0)
+    {
+        return 1;
+    }
+
+    for (int i = 0; i < 5; i++)
+    {
+        str[i] = 0;
+    }
+    int firstChar = 0b0011100000000000;
+    int secondChar = 0b0000011110000000;
+    int thirdChar = 0b0000000001110000;
+    int fourChar = 0b0000000000001111;
+    int whole = number;
+    int nums[4];
+    nums[0] = (firstChar & number) >> 11;
+    nums[1] = (secondChar & number) >> 7;
+    nums[2] = (thirdChar & number) >> 4;
+    nums[3] = (fourChar & number);
+    int i;
+
+    for (i = 3; i > -1; i--)
+    {
+
+        if (nums[i] == 10)
+        {
+            str[i] = 'A';
+        }
+        else if (nums[i] == 11)
+        {
+            str[i] = 'B';
+        }
+        else if (nums[i] == 12)
+        {
+            str[i] = 'C';
+        }
+        else if (nums[i] == 13)
+        {
+            str[i] = 'D';
+        }
+        else if (nums[i] == 14)
+        {
+            str[i] = 'E';
+        }
+        else if (nums[i] == 15)
+        {
+            str[i] = 'F';
+        }
+        else
+        {
+            str[i] = nums[i] + 48;
+        }
+    }
+    return 0;
+}
