@@ -27,7 +27,7 @@ int main()
 
     //////////////////////////////////////////che???????
     // while (1){
-
+    //bc_box(2, 2, 3, 3);
     printAccumalte(value);
     printOperation(command, operand);
     printInstCount(instCount);
@@ -35,6 +35,7 @@ int main()
     printKeys();
 
     printMemory();
+    printBoxBigChars(15);
 
     mt_gotoXY(24, 0);
     mt_clearcolor();

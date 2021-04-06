@@ -8,7 +8,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	gcc -c -o $@  $<
 
 main: main.c libsrc/libs/libmemory.a libsrc/libs/libmyTerminal.a libsrc/libs/libbigChars.a libsrc/libs/libother.a
-	gcc main.c -o main -lmemory -lmyTerminal -lbigChars -lother -Llibsrc/libs 
+	gcc main.c -o main -Llibsrc/libs  -lother -lbigChars  -lmyTerminal -lmemory 
 
 libsrc/libs/libmemory.a: objectsrc/memory.o
 	ar rc libsrc/libs/libmemory.a objectsrc/memory.o

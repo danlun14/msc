@@ -83,7 +83,7 @@ int bc_box(int x1, int y1, int x2, int y2)
     return 0;
 }
 
-int bc_printbigchar(int *a, int x, int y, enum colors fg, enum colors bg)
+int bc_printbigchar(long *a, int x, int y, enum colors fg, enum colors bg)
 {
     if (!a ||
         x < 1 || y < 1 ||

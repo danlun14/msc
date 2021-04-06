@@ -11,5 +11,6 @@ int printAccumalte(int accum);
 int printInstCount(int instCount);
 int printFlags();
 int printKeys();
+int printBoxBigChars(int cell);
 
 #endif
