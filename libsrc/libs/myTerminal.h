@@ -3,6 +3,10 @@
 
 #include <stdio.h>
 
+#define defaultActiveFlag cyan
+#define defaultBackGround white
+#define defaultForgeGround black
+
 enum colors
 {
     black = 0,

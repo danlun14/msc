@@ -13,4 +13,6 @@ int printFlags();
 int printKeys();
 int printBoxBigChars(int cell);
 
+int markChosenCell(int cell, enum colors color);
+
 #endif

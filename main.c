@@ -11,32 +11,96 @@ int main()
 
     sc_regInit();
     sc_memoryInit();
-
-    int command = 0, operand = 0, value = 0, temp = 1;
+    sc_regSet(O, 1);
+    sc_regSet(T, 1);
+    int command = 0, operand = 0, value = 0;
     sc_commandEncode(0x32, 0x33, &value);
 
     sc_memorySet(15, value);
-    sc_commandEncode(0x32, 0x33, &value);
-    sc_memorySet(15, value);
-    mt_setbgcolor(white);
-    mt_setfgcolor(black);
+    sc_commandEncode(0x2F, 0x37, &value);
+    sc_memorySet(22, value);
 
     sc_commandDecode(value, &command, &operand);
-
+    int cell = 0;
     int instCount = 0;
 
-    //////////////////////////////////////////che???????
-    // while (1){
-    //bc_box(2, 2, 3, 3);
-    printAccumalte(value);
-    printOperation(command, operand);
-    printInstCount(instCount);
-    printFlags();
-    printKeys();
+    enum keys key;
 
-    printMemory();
-    printBoxBigChars(15);
+    enum colors setup_color = blue;
+    enum colors currient_color = blue;
+    while (1)
+    {
 
-    mt_gotoXY(24, 0);
-    mt_clearcolor();
+        printAccumalte(value);
+        printOperation(command, operand);
+        printInstCount(instCount);
+        printFlags();
+        printKeys();
+
+        printMemory();
+        markChosenCell(cell, currient_color);
+        currient_color = setup_color;
+        printBoxBigChars(cell);
+
+        //mt_gotoXY(24,0);
+        rk_readKey(&key);
+        if (key == 'q')
+        {
+            break;
+        }
+        if (key == RIGHT)
+        {
+            if ((cell + 1) % 10 != 0)
+            {
+                cell++;
+            }
+            else
+            {
+                currient_color = red;
+            }
+        }
+        if (key == LEFT)
+        {
+            if ((cell) % 10 != 0)
+            {
+                cell--;
+            }
+            else
+            {
+                currient_color = red;
+            }
+        }
+        if (key == UP)
+        {
+            if (cell > 9)
+            {
+                cell -= 10;
+            }
+            else
+            {
+                currient_color = red;
+            }
+        }
+        if (key == DOWN)
+        {
+            if (cell < 90)
+            {
+                cell += 10;
+            }
+            else
+            {
+                currient_color = red;
+            }
+        }
+        if (key == F5)
+        {
+            setup_color = blue;
+        }
+        if (key == F6)
+        {
+            setup_color = green;
+        }
+        instCount++;
+    }
+    return 0;
 }

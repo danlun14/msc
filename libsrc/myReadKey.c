@@ -73,24 +73,33 @@ int rk_readKey(enum keys *key)
 
 int rk_mytermsave()
 {
-    tcgetattr(0, &tty);
-    savetty = tty;
 
+    struct termios options;
+    int fd = open("myterm.bin", O_CREAT | O_RDWR | O_TRUNC);
+
+    if (tcgetattr(STDIN_FILENO, &options) != 0)
+        return -1;
+    if (!write(fd, &options, sizeof(options)))
+        return -1;
     return 0;
 }
 
 int rk_mytermrestore()
 {
-    if (tcsetattr(0, TCSANOW, &savetty))
-    {
-        return 1;
-    }
+    struct termios options;
+    int fd = open("myterm.bin", O_RDONLY);
+
+    if (!read(fd, &options, sizeof(options)))
+        return -1;
+    if (!tcsetattr(STDIN_FILENO, TCSAFLUSH, &options))
+        return -1;
 
     return 0;
 }
 
 int rk_mytermregime(int regime, int vtime, int vmin, int echo, int sigint)
 {
+    struct termios tty;
     if (regime == 1)
     {
         tty.c_lflag &= ~ICANON;

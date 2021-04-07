@@ -7,7 +7,7 @@ int sc_memoryInit()
 {
     for (int i = 0; i < 100; i++)
     {
-        sc_memory[i] = 0b0100000000000000;
+        sc_memory[i] = 0;
     }
     return 0;
 }
@@ -113,7 +113,7 @@ int sc_commandEncode(int command, int operand, int *value)
     }
 
     command = command << 7;
-    *value = (command + operand) | 0b0100000000000000;
+    *value = command + operand;
     return 0;
 }
 int sc_commandDecode(int value, int *command, int *operand)
@@ -122,7 +122,7 @@ int sc_commandDecode(int value, int *command, int *operand)
     short codeMask = 0b0011111110000000;
     short operandMask = 0b0000000001111111;
 
-    if ((checkMask & value) == 0)
+    if ((checkMask & value) == 1)
     {
         sc_regSet(E, 1);
         return -1;

@@ -4,6 +4,10 @@
 #include <unistd.h>
 #include <termios.h>
 #include <string.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 // F5     F6     UP   DOWN LEFT RIGHT
 // \E[15~ \E[17~ \E[A \E[B \E[D \E[C
@@ -20,9 +24,6 @@ enum keys
     MINUS,
     PLUS
 };
-
-struct termios tty;
-struct termios savetty;
 
 int rk_readKey(enum keys *key);
 int rk_mytermsave();

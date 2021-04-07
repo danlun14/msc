@@ -2,6 +2,8 @@
 
 int printMemory()
 {
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(defaultBackGround);
     mt_gotoXY(1, 28);
     printf("Memory");
     if (bc_box(1, 1, 63, 13) != 0)
@@ -19,10 +21,15 @@ int printMemory()
             printf("+%02X%02X\n", command, operand);
         }
     }
+
+    mt_clearcolor();
+    return 0;
 }
 
 int printOperation(int command, int operand)
 {
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(defaultBackGround);
     if (bc_box(63, 7, 84, 10) != 0)
     {
         return 1;
@@ -33,10 +40,15 @@ int printOperation(int command, int operand)
 
     mt_gotoXY(8, 69);
     printf("+ %02X : %02X\n", command, operand);
+
+    mt_clearcolor();
+    return 0;
 }
 
 int printAccumalte(int accum)
 {
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(defaultBackGround);
     if (bc_box(63, 1, 84, 4) != 0)
     {
         return 1;
@@ -58,12 +70,14 @@ int printAccumalte(int accum)
             printf("-%04X", tmp * -1);
         }
     }
-
+    mt_clearcolor();
     return 0;
 }
 
 int printInstCount(int instCount)
 {
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(defaultBackGround);
     if (bc_box(63, 4, 84, 7) != 0)
     {
         return 1;
@@ -73,10 +87,15 @@ int printInstCount(int instCount)
     printf("InstructionCounter");
     mt_gotoXY(5, 70);
     printf("+%04d", instCount);
+
+    mt_clearcolor();
+    return 0;
 }
 
 int printFlags()
 {
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(defaultBackGround);
     if (bc_box(63, 10, 84, 13) != 0)
     {
         return 1;
@@ -84,7 +103,7 @@ int printFlags()
 
     mt_gotoXY(10, 71);
     printf("Flags");
-    mt_gotoXY(11, 64);
+
     int _P;
     sc_regGet(P, &_P);
     int _O;
@@ -95,11 +114,60 @@ int printFlags()
     sc_regGet(T, &_T);
     int _E;
     sc_regGet(E, &_E);
-    printf("P-%d O-%d M-%d T-%d E-%d", _P, _O, _M, _T, _E);
+
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(defaultBackGround);
+    mt_gotoXY(11, 65);
+    if (_P == 1)
+    {
+        mt_setbgcolor(defaultActiveFlag);
+    }
+    printf("P", _P);
+
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(defaultBackGround);
+    mt_gotoXY(11, 69);
+    if (_O == 1)
+    {
+        mt_setbgcolor(defaultActiveFlag);
+    }
+    printf("O", _O);
+
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(defaultBackGround);
+    mt_gotoXY(11, 73);
+    if (_M == 1)
+    {
+        mt_setbgcolor(defaultActiveFlag);
+    }
+    printf("M", _M);
+
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(defaultBackGround);
+    mt_gotoXY(11, 77);
+    if (_T == 1)
+    {
+        mt_setbgcolor(defaultActiveFlag);
+    }
+    printf("T", _T);
+
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(defaultBackGround);
+    mt_gotoXY(11, 81);
+    if (_E == 1)
+    {
+        mt_setbgcolor(defaultActiveFlag);
+    }
+    printf("E", _E);
+
+    mt_clearcolor();
+    return 0;
 }
 
 int printKeys()
 {
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(defaultBackGround);
     if (bc_box(63, 13, 84, 23) != 0)
     {
         return 1;
@@ -121,11 +189,20 @@ int printKeys()
     printf("F5 - accumulator");
     mt_gotoXY(20, 64);
     printf("F6 - instrCounter");
+
+    mt_clearcolor();
+    return 0;
 }
 
 int printBoxBigChars(int cell)
 {
-    bc_box(1, 13, 63, 23);
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(defaultBackGround);
+
+    if (bc_box(1, 13, 63, 23) != 0)
+    {
+        return 1;
+    }
     long bigChars[5][2];
 
     int tmp_number = 0;
@@ -150,9 +227,7 @@ int printBoxBigChars(int cell)
     {
         return 1;
     }
-    int irir = 0;
-    mt_gotoXY(23, 3 + 1);
-    printf("%s", buf);
+
     int j = 1;
     for (int i = 0; i < 4; i++)
     {
@@ -176,7 +251,6 @@ int printBoxBigChars(int cell)
         {
             bigChars[j][0] = bigThree(0);
             bigChars[j][1] = bigThree(1);
-            irir++;
         }
         else if (buf[i] == '4')
         {
@@ -246,11 +320,7 @@ int printBoxBigChars(int cell)
         j++;
     }
 
-    mt_gotoXY(23, 2);
-    printf("%d", irir);
     int x;
-    enum colors fg = black;
-    enum colors bg = white;
 
     for (int i = 0; i < 5; i++)
     {
@@ -262,11 +332,27 @@ int printBoxBigChars(int cell)
         {
             x = 8;
         }
-        bc_printbigchar(bigChars[i], x + i * 11, 14, fg, bg);
+        bc_printbigchar(bigChars[i], x + i * 11, 14, defaultForgeGround, defaultBackGround);
     }
-
     mt_gotoXY(26, 1);
     fflush(stdout);
 
+    mt_clearcolor();
+
     return 0;
+}
+
+int markChosenCell(int cell, enum colors color)
+{
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(color);
+    int y = cell % 10;
+    int x = (cell - y) / 10;
+    int value = 0;
+    int command = 0;
+    int operand = 0;
+    sc_memoryGet(x * 10 + y, &value);
+    sc_commandDecode(value, &command, &operand);
+    mt_gotoXY(2 + x, 2 + 6 * y);
+    printf("+%02X%02X\n", command, operand);
 }
