@@ -7,8 +7,14 @@
 
 int main()
 {
-    mt_clrscr();
+    struct termios default_options;
+    if (tcgetattr(STDIN_FILENO, &default_options) != 0)
+    {
+        return -1;
+    }
 
+    mt_clrscr();
+    sc_accumulatorInit();
     sc_regInit();
     sc_memoryInit();
     sc_regSet(O, 1);
@@ -30,8 +36,8 @@ int main()
     enum colors currient_color = blue;
     while (1)
     {
-
-        printAccumalte(value);
+        mt_clrscr();
+        printAccumulate();
         printOperation(command, operand);
         printInstCount(instCount);
         printFlags();
@@ -41,14 +47,16 @@ int main()
         markChosenCell(cell, currient_color);
         currient_color = setup_color;
         printBoxBigChars(cell);
-
+        mt_gotoXY(23, 0);
         //mt_gotoXY(24,0);
         rk_readKey(&key);
+        mt_gotoXY(23, 0);
+        //tcsetattr(STDIN_FILENO, TCSAFLUSH, &default_options);
         if (key == 'q')
         {
             break;
         }
-        if (key == RIGHT)
+        else if (key == RIGHT)
         {
             if ((cell + 1) % 10 != 0)
             {
@@ -59,7 +67,7 @@ int main()
                 currient_color = red;
             }
         }
-        if (key == LEFT)
+        else if (key == LEFT)
         {
             if ((cell) % 10 != 0)
             {
@@ -70,7 +78,7 @@ int main()
                 currient_color = red;
             }
         }
-        if (key == UP)
+        else if (key == UP)
         {
             if (cell > 9)
             {
@@ -81,7 +89,7 @@ int main()
                 currient_color = red;
             }
         }
-        if (key == DOWN)
+        else if (key == DOWN)
         {
             if (cell < 90)
             {
@@ -92,15 +100,66 @@ int main()
                 currient_color = red;
             }
         }
-        if (key == F5)
+        else if (key == F5)
         {
-            setup_color = blue;
+            inputAccumulate();
         }
-        if (key == F6)
+        else if (key == F6)
         {
-            setup_color = green;
         }
+        else if (key == 'l')
+        {
+            mt_gotoXY(14, 64);
+            mt_setbgcolor(defaultActiveBG);
+            mt_setfgcolor(defaultForgeGround);
+            printf("l - load");
+            mt_clearcolor();
+            mt_gotoXY(23, 0);
+            fflush(stdout);
+            rk_readKey(&key);
+        }
+        else if (key == 'r')
+        {
+            inputOperation();
+        }
+        else if (key == 's')
+        {
+            mt_gotoXY(15, 64);
+            mt_setbgcolor(defaultActiveBG);
+            mt_setfgcolor(defaultForgeGround);
+            printf("s - save");
+            mt_clearcolor();
+            mt_gotoXY(23, 0);
+            fflush(stdout);
+            rk_readKey(&key);
+        }
+        else if (key == 't')
+        {
+            mt_gotoXY(17, 64);
+            mt_setbgcolor(defaultActiveBG);
+            mt_setfgcolor(defaultForgeGround);
+            printf("t - step");
+
+            mt_clearcolor();
+            mt_gotoXY(23, 0);
+            fflush(stdout);
+            rk_readKey(&key);
+        }
+        else if (key == 'i')
+        {
+            //inputAccumulate();
+            mt_gotoXY(23, 0);
+            rk_readKey(&key);
+        }
+        //mt_clearcolor();
         instCount++;
     }
+    //rk_mytermregime(0, 0, 0, 0, 0);
+    //rk_mytermrestore();
+
+    //if (!tcsetattr(STDIN_FILENO, TCSAFLUSH, &default_options))
+    //   return -1;
+
+    mt_gotoXY(23, 0);
     return 0;
 }

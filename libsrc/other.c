@@ -44,9 +44,15 @@ int printOperation(int command, int operand)
     mt_clearcolor();
     return 0;
 }
-
-int printAccumalte(int accum)
+int inputOperation()
 {
+}
+
+int printAccumulate()
+{
+    int accum = 0;
+    sc_accumulatorGet(&accum);
+
     mt_setfgcolor(defaultForgeGround);
     mt_setbgcolor(defaultBackGround);
     if (bc_box(63, 1, 84, 4) != 0)
@@ -72,6 +78,27 @@ int printAccumalte(int accum)
     }
     mt_clearcolor();
     return 0;
+}
+
+int inputAccumulate()
+{
+
+    mt_setbgcolor(defaultActiveBG);
+    mt_setfgcolor(defaultForgeGround);
+    mt_gotoXY(19, 64);
+    printf("F5 - accumulator");
+    mt_clearcolor();
+    mt_gotoXY(23, 0);
+    printf("Input value:\n");
+    int accum, result;
+    scanf("%X", &accum);
+
+    result = sc_accumulatorSet(accum);
+    if (result != 0)
+    {
+        printf("Incorrect accumulator");
+    }
+    mt_gotoXY(23, 0);
 }
 
 int printInstCount(int instCount)
@@ -120,7 +147,7 @@ int printFlags()
     mt_gotoXY(11, 65);
     if (_P == 1)
     {
-        mt_setbgcolor(defaultActiveFlag);
+        mt_setbgcolor(defaultActiveBG);
     }
     printf("P", _P);
 
@@ -129,7 +156,7 @@ int printFlags()
     mt_gotoXY(11, 69);
     if (_O == 1)
     {
-        mt_setbgcolor(defaultActiveFlag);
+        mt_setbgcolor(defaultActiveBG);
     }
     printf("O", _O);
 
@@ -138,7 +165,7 @@ int printFlags()
     mt_gotoXY(11, 73);
     if (_M == 1)
     {
-        mt_setbgcolor(defaultActiveFlag);
+        mt_setbgcolor(defaultActiveBG);
     }
     printf("M", _M);
 
@@ -147,7 +174,7 @@ int printFlags()
     mt_gotoXY(11, 77);
     if (_T == 1)
     {
-        mt_setbgcolor(defaultActiveFlag);
+        mt_setbgcolor(defaultActiveBG);
     }
     printf("T", _T);
 
@@ -156,7 +183,7 @@ int printFlags()
     mt_gotoXY(11, 81);
     if (_E == 1)
     {
-        mt_setbgcolor(defaultActiveFlag);
+        mt_setbgcolor(defaultActiveBG);
     }
     printf("E", _E);
 

@@ -4,10 +4,13 @@
 #include "memory.h"
 #include "myTerminal.h"
 #include "bigChars.h"
+#include "myReadKey.h"
 
 int printOperation();
+int inputOperation();
 int printMemory();
-int printAccumalte(int accum);
+int printAccumulate();
+int inputAccumulate();
 int printInstCount(int instCount);
 int printFlags();
 int printKeys();

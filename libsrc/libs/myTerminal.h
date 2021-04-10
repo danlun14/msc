@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define defaultActiveFlag cyan
+#define defaultActiveBG cyan
 #define defaultBackGround white
 #define defaultForgeGround black
 

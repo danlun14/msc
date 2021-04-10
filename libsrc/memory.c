@@ -1,8 +1,31 @@
 #include "libs/memory.h"
-//
+
 short sc_memory[100];
 short registr;
 
+short accumulator;
+
+//*********************************************************accumulator*********************************************************
+int sc_accumulatorInit()
+{
+    accumulator = 0;
+}
+int sc_accumulatorSet(int value)
+{
+    if (value < (0b0111111111111111 * -1) || (value > 0b0111111111111111))
+    {
+        return 1;
+    }
+    accumulator = value;
+    return 0;
+}
+
+int sc_accumulatorGet(int *value)
+{
+    *value = accumulator;
+    return 0;
+}
+//*********************************************************memory*********************************************************
 int sc_memoryInit()
 {
     for (int i = 0; i < 100; i++)
@@ -11,6 +34,7 @@ int sc_memoryInit()
     }
     return 0;
 }
+
 int sc_memorySet(int address, int value)
 {
     if ((address >= 99) || (address < 0))
@@ -32,6 +56,7 @@ int sc_memoryGet(int address, int *value)
     *value = sc_memory[address];
     return 0;
 }
+//*********************************************************memory save load*********************************************************
 int sc_memorySave(char *filename)
 {
     FILE *ptrFile = fopen(filename, "wb");
@@ -55,6 +80,9 @@ int sc_memoryLoad(char *filename)
     fclose(ptrFile);
     return 0;
 }
+
+//*********************************************************register*********************************************************
+
 int sc_regInit(void)
 {
     registr = 0;
@@ -99,6 +127,9 @@ int sc_regGet(int flag, int *value) //0b 0/1 0 1000101 0100110
     }
     return 0;
 }
+
+//*********************************************************decode encode *********************************************************
+
 int sc_commandEncode(int command, int operand, int *value)
 {
     if ((command > 0x7F) || (command < 0))

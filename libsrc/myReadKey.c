@@ -1,5 +1,8 @@
 #include "libs/myReadKey.h"
 
+struct termios tty;
+struct termios savetty;
+
 int rk_readKey(enum keys *key)
 {
     rk_mytermsave();
@@ -7,7 +10,7 @@ int rk_readKey(enum keys *key)
     char buf[6] = {0};
     rk_mytermregime(1, 0, 1, 1, 1);
 
-    read(0, buf, 6);
+    read(STDIN_FILENO, buf, 6);
 
     if (strcmp(buf, "\E[C") == 0)
     {
@@ -71,7 +74,7 @@ int rk_readKey(enum keys *key)
     return 0;
 }
 
-int rk_mytermsave()
+/*int rk_mytermsave()
 {
 
     struct termios options;
@@ -95,8 +98,24 @@ int rk_mytermrestore()
         return -1;
 
     return 0;
+}*/
+int rk_mytermsave()
+{
+    tcgetattr(STDIN_FILENO, &tty);
+    savetty = tty;
+
+    return 0;
 }
 
+int rk_mytermrestore()
+{
+    if (tcsetattr(STDIN_FILENO, TCSANOW, &savetty))
+    {
+        return 1;
+    }
+
+    return 0;
+}
 int rk_mytermregime(int regime, int vtime, int vmin, int echo, int sigint)
 {
     struct termios tty;
