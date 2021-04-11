@@ -22,9 +22,9 @@ int main()
     int command = 0, operand = 0, value = 0;
     sc_commandEncode(0x32, 0x33, &value);
 
-    sc_memorySet(15, value);
+    //sc_memorySet(15, value);
     sc_commandEncode(0x2F, 0x37, &value);
-    sc_memorySet(22, value);
+    // sc_memorySet(22, value);
 
     sc_commandDecode(value, &command, &operand);
     int cell = 0;
@@ -109,14 +109,7 @@ int main()
         }
         else if (key == 'l')
         {
-            mt_gotoXY(14, 64);
-            mt_setbgcolor(defaultActiveBG);
-            mt_setfgcolor(defaultForgeGround);
-            printf("l - load");
-            mt_clearcolor();
-            mt_gotoXY(23, 0);
-            fflush(stdout);
-            rk_readKey(&key);
+            loadMemory();
         }
         else if (key == 'r')
         {
@@ -124,14 +117,7 @@ int main()
         }
         else if (key == 's')
         {
-            mt_gotoXY(15, 64);
-            mt_setbgcolor(defaultActiveBG);
-            mt_setfgcolor(defaultForgeGround);
-            printf("s - save");
-            mt_clearcolor();
-            mt_gotoXY(23, 0);
-            fflush(stdout);
-            rk_readKey(&key);
+            saveMemory();
         }
         else if (key == 't')
         {

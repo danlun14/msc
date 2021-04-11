@@ -382,4 +382,77 @@ int markChosenCell(int cell, enum colors color)
     sc_commandDecode(value, &command, &operand);
     mt_gotoXY(2 + x, 2 + 6 * y);
     printf("+%02X%02X\n", command, operand);
+    mt_gotoXY(23, 0);
+}
+
+int loadMemory()
+{
+    mt_gotoXY(14, 64);
+    mt_setbgcolor(defaultActiveBG);
+    mt_setfgcolor(defaultForgeGround);
+    printf("l - load");
+    mt_clearcolor();
+    mt_gotoXY(23, 0);
+    printf("Input filename:\n");
+    fflush(stdout);
+    char filename[100];
+    enum keys key;
+    scanf("%s", filename);
+    if (strcmp(filename, "STANDART_FILENAME") == 0)
+    {
+        strcpy(filename, STANDART_FILENAME);
+    }
+    if (sc_memoryLoad(filename))
+    {
+        mt_gotoXY(25, 0);
+        printf("Error reading file");
+        mt_gotoXY(26, 0);
+        printf("Press any key to continue");
+        fflush(stdout);
+        rk_readKey(&key);
+        return -1;
+    }
+    mt_gotoXY(25, 0);
+    printf("Succsess loading");
+    mt_gotoXY(26, 0);
+    printf("Press any key to continue");
+    fflush(stdout);
+    rk_readKey(&key);
+    return 0;
+}
+
+int saveMemory()
+{
+    mt_gotoXY(15, 64);
+    mt_setbgcolor(defaultActiveBG);
+    mt_setfgcolor(defaultForgeGround);
+    printf("s - save");
+    mt_clearcolor();
+    mt_gotoXY(23, 0);
+    printf("Input filename:\n");
+    fflush(stdout);
+    char filename[100];
+    enum keys key;
+    scanf("%s", filename);
+    if (strcmp(filename, "STANDART_FILENAME") == 0)
+    {
+        strcpy(filename, STANDART_FILENAME);
+    }
+    if (sc_memorySave(filename))
+    {
+        mt_gotoXY(25, 0);
+        printf("Error open file");
+        mt_gotoXY(26, 0);
+        printf("Press any key to continue");
+        fflush(stdout);
+        rk_readKey(&key);
+        return -1;
+    }
+    mt_gotoXY(25, 0);
+    printf("Succsess saving");
+    mt_gotoXY(26, 0);
+    printf("Press any key to continue");
+    fflush(stdout);
+    rk_readKey(&key);
+    return 0;
 }
