@@ -9,18 +9,28 @@
 #include <sys/time.h>
 
 void signalhandler(int signo){
-//if (signo == SIGALRM){
-    //if(sc_cellSet(1) != 0){
-//	sc_cellInit();
-//    }
-//    mt_gotoXY(23,0);
-    printf("uauua");
+if (signo == SIGALRM){
+
+    if(sc_cellSet(1) != 0){
+	sc_cellInit();
+    //}
+//    //mt_gotoXY(23,0);
+    printf("uauua\n");
 //    fflush(stdout);
-//    }else{
+    }//else{
 //    mt_gotoXY(23,0);
 //    printf("asds");
 //    fflush(stdout);
-//    }
+    printMemory();
+    printInstCount();
+    printBoxBigChars();
+    int operand=0,command = 0, value = 0, cell = 0;
+    sc_cellGet(&cell);
+    sc_memoryGet(cell,&value);
+    sc_commandDecode(value, &command, &operand);
+    printOperation(command, operand);
+    markChosenCell(blue);
+    }
 }
 
 int main()
@@ -41,19 +51,17 @@ int main()
     
     struct itimerval nval,oval;
     
-//    signal(SIGALRM, signalhandler);
+    //signal(SIGALRM, signalhandler);
     
-    nval.it_interval.tv_usec = 3;
-    nval.it_interval.tv_usec = 500;
-    nval.it_value.tv_usec = 3;
-    nval.it_value.tv_usec = 500;
-    
+    nval.it_interval.tv_sec = 0;
+    nval.it_interval.tv_usec = 0;
+    nval.it_value.tv_sec = 0;
+    nval.it_value.tv_usec = 0;
+
     setitimer(ITIMER_REAL,&nval,&oval);
-    
-    while(1){
-	pause();
-    }
-    /*
+//    while(1){
+//    }
+
     mt_clrscr();
     sc_accumulatorInit();
     sc_regInit();
@@ -157,8 +165,11 @@ int main()
         }
         else if (key == 'r')
         {
-            //setitimer(ITIMER_REAL, &nval, &oval);
-    	    rk_readKey(&key);
+    	    nval.it_interval.tv_sec = 1;
+    	    nval.it_value.tv_sec = 1;
+            //sigaction(ITIMER_REAL, &act, NULL);
+    	    setitimer(ITIMER_REAL,&nval,&oval);
+    	    //rk_readKey(&key);
         }
         else if (key == 's')
         {
@@ -191,7 +202,8 @@ int main()
 
     //if (!tcsetattr(STDIN_FILENO, TCSAFLUSH, &default_options))
     //   return -1;
-    */
+    
     mt_gotoXY(23, 0);
+    mt_clearcolor();
     return 0;
 }
