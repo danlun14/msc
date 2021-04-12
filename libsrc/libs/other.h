@@ -13,12 +13,12 @@ int inputOperation();
 int printMemory();
 int printAccumulate();
 int inputAccumulate();
-int printInstCount(int instCount);
+int printInstCount();
 int printFlags();
 int printKeys();
-int printBoxBigChars(int cell);
+int printBoxBigChars();
 
-int markChosenCell(int cell, enum colors color);
+int markChosenCell( enum colors color);
 
 int loadMemory();
 int saveMemory();

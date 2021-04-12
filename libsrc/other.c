@@ -101,7 +101,7 @@ int inputAccumulate()
     mt_gotoXY(23, 0);
 }
 
-int printInstCount(int instCount)
+int printInstCount()
 {
     mt_setfgcolor(defaultForgeGround);
     mt_setbgcolor(defaultBackGround);
@@ -113,7 +113,9 @@ int printInstCount(int instCount)
     mt_gotoXY(4, 64);
     printf("InstructionCounter");
     mt_gotoXY(5, 70);
-    printf("+%04d", instCount);
+    short value;
+    sc_cellGet(&value);
+    printf("+%04d", value);
 
     mt_clearcolor();
     return 0;
@@ -221,8 +223,10 @@ int printKeys()
     return 0;
 }
 
-int printBoxBigChars(int cell)
+int printBoxBigChars()
 {
+    short cell;
+    sc_cellGet(&cell);
     mt_setfgcolor(defaultForgeGround);
     mt_setbgcolor(defaultBackGround);
 
@@ -369,10 +373,12 @@ int printBoxBigChars(int cell)
     return 0;
 }
 
-int markChosenCell(int cell, enum colors color)
+int markChosenCell( enum colors color)
 {
     mt_setfgcolor(defaultForgeGround);
     mt_setbgcolor(color);
+    short cell;
+    sc_cellGet(&cell);
     int y = cell % 10;
     int x = (cell - y) / 10;
     int value = 0;

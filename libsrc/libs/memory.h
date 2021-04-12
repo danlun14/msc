@@ -9,6 +9,10 @@
 #define T 4
 #define E 5
 
+int sc_cellInit();
+int sc_cellSet(int dcell);
+int sc_cellGet(short *value);
+
 int sc_accumulatorInit();
 int sc_accumulatorGet(int *value);
 int sc_accumulatorSet(int value);

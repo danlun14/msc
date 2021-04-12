@@ -5,7 +5,26 @@ short registr;
 
 short accumulator;
 
+short cell;
 //*********************************************************accumulator*********************************************************
+
+int sc_cellInit(){
+    cell = 0;
+}
+
+int sc_cellSet(int dcell){
+    if(((cell+dcell) < 0 )||((cell+dcell)>99)){
+    return 1;
+    }
+    cell +=dcell;
+    return 0;
+}
+
+int sc_cellGet(short *value){
+    *value = cell;
+    return 0;
+}
+
 int sc_accumulatorInit()
 {
     accumulator = 0;

@@ -5,6 +5,24 @@
 #include "libsrc/libs/myReadKey.h"
 #include "libsrc/libs/other.h"
 
+#include <signal.h>
+#include <sys/time.h>
+
+void signalhandler(int signo){
+//if (signo == SIGALRM){
+    //if(sc_cellSet(1) != 0){
+//	sc_cellInit();
+//    }
+//    mt_gotoXY(23,0);
+    printf("uauua");
+//    fflush(stdout);
+//    }else{
+//    mt_gotoXY(23,0);
+//    printf("asds");
+//    fflush(stdout);
+//    }
+}
+
 int main()
 {
     struct termios default_options;
@@ -13,6 +31,29 @@ int main()
         return -1;
     }
 
+    struct sigaction act;
+    act.sa_handler = &signalhandler;
+    act.sa_flags = SA_RESTART;
+    
+    sigemptyset(&act.sa_mask);
+    
+    sigaction(SIGALRM, &act, NULL);
+    
+    struct itimerval nval,oval;
+    
+//    signal(SIGALRM, signalhandler);
+    
+    nval.it_interval.tv_usec = 3;
+    nval.it_interval.tv_usec = 500;
+    nval.it_value.tv_usec = 3;
+    nval.it_value.tv_usec = 500;
+    
+    setitimer(ITIMER_REAL,&nval,&oval);
+    
+    while(1){
+	pause();
+    }
+    /*
     mt_clrscr();
     sc_accumulatorInit();
     sc_regInit();
@@ -22,14 +63,13 @@ int main()
     int command = 0, operand = 0, value = 0;
     sc_commandEncode(0x32, 0x33, &value);
 
-    //sc_memorySet(15, value);
+    sc_memorySet(15, value);
     sc_commandEncode(0x2F, 0x37, &value);
-    // sc_memorySet(22, value);
+    sc_memorySet(22, value);
 
     sc_commandDecode(value, &command, &operand);
-    int cell = 0;
     int instCount = 0;
-
+    setitimer(ITIMER_REAL, &nval, &oval);
     enum keys key;
 
     enum colors setup_color = blue;
@@ -39,14 +79,14 @@ int main()
         mt_clrscr();
         printAccumulate();
         printOperation(command, operand);
-        printInstCount(instCount);
+        printInstCount();
         printFlags();
         printKeys();
 
         printMemory();
-        markChosenCell(cell, currient_color);
+        markChosenCell(currient_color);
         currient_color = setup_color;
-        printBoxBigChars(cell);
+        printBoxBigChars();
         mt_gotoXY(23, 0);
         //mt_gotoXY(24,0);
         rk_readKey(&key);
@@ -58,47 +98,51 @@ int main()
         }
         else if (key == RIGHT)
         {
-            if ((cell + 1) % 10 != 0)
+            if (sc_cellSet(1) == 0)
             {
-                cell++;
+                
             }
             else
             {
                 currient_color = red;
             }
+            sc_cellGet(&instCount);
         }
         else if (key == LEFT)
         {
-            if ((cell) % 10 != 0)
+            if (sc_cellSet(-1) == 0)
             {
-                cell--;
+                
             }
             else
             {
                 currient_color = red;
             }
+            sc_cellGet(&instCount);
         }
         else if (key == UP)
         {
-            if (cell > 9)
+            if (sc_cellSet(-10)==0)
             {
-                cell -= 10;
+                
             }
             else
             {
                 currient_color = red;
             }
+            sc_cellGet(&instCount);
         }
         else if (key == DOWN)
         {
-            if (cell < 90)
+            if (sc_cellSet(10) == 0)
             {
-                cell += 10;
+                
             }
             else
             {
                 currient_color = red;
             }
+            sc_cellGet(&instCount);
         }
         else if (key == F5)
         {
@@ -113,7 +157,8 @@ int main()
         }
         else if (key == 'r')
         {
-            inputOperation();
+            //setitimer(ITIMER_REAL, &nval, &oval);
+    	    rk_readKey(&key);
         }
         else if (key == 's')
         {
@@ -133,6 +178,7 @@ int main()
         }
         else if (key == 'i')
         {
+    	    sc_memoryInit();
             //inputAccumulate();
             mt_gotoXY(23, 0);
             rk_readKey(&key);
@@ -145,7 +191,7 @@ int main()
 
     //if (!tcsetattr(STDIN_FILENO, TCSAFLUSH, &default_options))
     //   return -1;
-
+    */
     mt_gotoXY(23, 0);
     return 0;
 }
