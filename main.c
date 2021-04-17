@@ -8,28 +8,51 @@
 #include <signal.h>
 #include <sys/time.h>
 
-void signalhandler(int signo){
-if (signo == SIGALRM){
+void signalhandler(int signo)
+{
+    int reg = 0;
+    sc_regGet(E, &reg);
+    if (reg == 1)
+    {
+        mt_clrscr();
+        printAccumulate();
+        printOperation();
+        printInstCount();
+        printFlags();
+        printKeys();
+        //fflush(stdout);
 
-    if(sc_cellSet(1) != 0){
-	sc_cellInit();
-    //}
-//    //mt_gotoXY(23,0);
-    printf("uauua\n");
-//    fflush(stdout);
-    }//else{
-//    mt_gotoXY(23,0);
-//    printf("asds");
-//    fflush(stdout);
-    printMemory();
-    printInstCount();
-    printBoxBigChars();
-    int operand=0,command = 0, value = 0, cell = 0;
-    sc_cellGet(&cell);
-    sc_memoryGet(cell,&value);
-    sc_commandDecode(value, &command, &operand);
-    printOperation(command, operand);
-    markChosenCell(blue);
+        printMemory();
+        printBoxBigChars();
+
+        markChosenCell(blue);
+        return;
+    }
+    if (signo == SIGALRM)
+    {
+
+        if (sc_cellSet(1) != 0)
+        {
+            sc_regSet(E, 1);
+            sc_cellInit();
+        }
+        mt_clrscr();
+        printAccumulate();
+        printOperation();
+        printInstCount();
+        printFlags();
+        printKeys();
+        mt_setfgcolor(black);
+        mt_setbgcolor(cyan);
+        mt_gotoXY(16, 64);
+        printf("r - run");
+        mt_clearcolor();
+        //fflush(stdout);
+
+        printMemory();
+        printBoxBigChars();
+
+        markChosenCell(green);
     }
 }
 
@@ -44,23 +67,23 @@ int main()
     struct sigaction act;
     act.sa_handler = &signalhandler;
     act.sa_flags = SA_RESTART;
-    
+
     sigemptyset(&act.sa_mask);
-    
+
     sigaction(SIGALRM, &act, NULL);
-    
-    struct itimerval nval,oval;
-    
+
+    struct itimerval nval, oval;
+
     //signal(SIGALRM, signalhandler);
-    
+
     nval.it_interval.tv_sec = 0;
     nval.it_interval.tv_usec = 0;
     nval.it_value.tv_sec = 0;
     nval.it_value.tv_usec = 0;
 
-    setitimer(ITIMER_REAL,&nval,&oval);
-//    while(1){
-//    }
+    setitimer(ITIMER_REAL, &nval, &oval);
+    //    while(1){
+    //    }
 
     mt_clrscr();
     sc_accumulatorInit();
@@ -76,7 +99,7 @@ int main()
     sc_memorySet(22, value);
 
     sc_commandDecode(value, &command, &operand);
-    int instCount = 0;
+    short instCount = 0;
     setitimer(ITIMER_REAL, &nval, &oval);
     enum keys key;
 
@@ -86,18 +109,26 @@ int main()
     {
         mt_clrscr();
         printAccumulate();
-        printOperation(command, operand);
+        printOperation();
         printInstCount();
         printFlags();
         printKeys();
 
         printMemory();
-        markChosenCell(currient_color);
-        currient_color = setup_color;
         printBoxBigChars();
+
+        markChosenCell(currient_color);
+
+        currient_color = setup_color;
         mt_gotoXY(23, 0);
         //mt_gotoXY(24,0);
         rk_readKey(&key);
+        nval.it_interval.tv_sec = 0;
+        nval.it_interval.tv_usec = 0;
+        nval.it_value.tv_sec = 0;
+        nval.it_value.tv_usec = 0;
+
+        setitimer(ITIMER_REAL, &nval, &oval);
         mt_gotoXY(23, 0);
         //tcsetattr(STDIN_FILENO, TCSAFLUSH, &default_options);
         if (key == 'q')
@@ -108,7 +139,6 @@ int main()
         {
             if (sc_cellSet(1) == 0)
             {
-                
             }
             else
             {
@@ -120,7 +150,6 @@ int main()
         {
             if (sc_cellSet(-1) == 0)
             {
-                
             }
             else
             {
@@ -130,9 +159,8 @@ int main()
         }
         else if (key == UP)
         {
-            if (sc_cellSet(-10)==0)
+            if (sc_cellSet(-10) == 0)
             {
-                
             }
             else
             {
@@ -144,7 +172,6 @@ int main()
         {
             if (sc_cellSet(10) == 0)
             {
-                
             }
             else
             {
@@ -165,11 +192,16 @@ int main()
         }
         else if (key == 'r')
         {
-    	    nval.it_interval.tv_sec = 1;
-    	    nval.it_value.tv_sec = 1;
-            //sigaction(ITIMER_REAL, &act, NULL);
-    	    setitimer(ITIMER_REAL,&nval,&oval);
-    	    //rk_readKey(&key);
+            int reg = 0;
+            sc_regGet(E, &reg);
+            if (reg != 1)
+            {
+                nval.it_interval.tv_sec = 1;
+                nval.it_value.tv_sec = 1;
+                //sigaction(ITIMER_REAL, &act, NULL);
+                setitimer(ITIMER_REAL, &nval, &oval);
+            }
+            //rk_readKey(&key);
         }
         else if (key == 's')
         {
@@ -189,20 +221,19 @@ int main()
         }
         else if (key == 'i')
         {
-    	    sc_memoryInit();
+            sc_memoryInit();
             //inputAccumulate();
             mt_gotoXY(23, 0);
             rk_readKey(&key);
         }
         //mt_clearcolor();
-        instCount++;
     }
     //rk_mytermregime(0, 0, 0, 0, 0);
     //rk_mytermrestore();
 
     //if (!tcsetattr(STDIN_FILENO, TCSAFLUSH, &default_options))
     //   return -1;
-    
+
     mt_gotoXY(23, 0);
     mt_clearcolor();
     return 0;

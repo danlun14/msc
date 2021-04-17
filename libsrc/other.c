@@ -26,7 +26,7 @@ int printMemory()
     return 0;
 }
 
-int printOperation(int command, int operand)
+int printOperation()
 {
     mt_setfgcolor(defaultForgeGround);
     mt_setbgcolor(defaultBackGround);
@@ -38,14 +38,20 @@ int printOperation(int command, int operand)
     mt_gotoXY(7, 69);
     printf("Operation");
 
+    short cell = 0;
+
+    int operand = 0, command = 0, value = 0;
+
+    sc_cellGet(&cell);
+
+    sc_memoryGet(cell, &value);
+    sc_commandDecode(value, &command, &operand);
+
     mt_gotoXY(8, 69);
     printf("+ %02X : %02X\n", command, operand);
 
     mt_clearcolor();
     return 0;
-}
-int inputOperation()
-{
 }
 
 int printAccumulate()
@@ -373,10 +379,9 @@ int printBoxBigChars()
     return 0;
 }
 
-int markChosenCell( enum colors color)
+int markChosenCell(enum colors color)
 {
-    mt_setfgcolor(defaultForgeGround);
-    mt_setbgcolor(color);
+
     short cell;
     sc_cellGet(&cell);
     int y = cell % 10;
@@ -387,7 +392,10 @@ int markChosenCell( enum colors color)
     sc_memoryGet(x * 10 + y, &value);
     sc_commandDecode(value, &command, &operand);
     mt_gotoXY(2 + x, 2 + 6 * y);
+    mt_setfgcolor(defaultForgeGround);
+    mt_setbgcolor(color);
     printf("+%02X%02X\n", command, operand);
+    mt_clearcolor();
     mt_gotoXY(23, 0);
 }
 
