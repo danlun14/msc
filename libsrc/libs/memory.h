@@ -9,6 +9,9 @@
 #define T 4
 #define E 5
 
+extern short _cell;
+extern short _accum;
+
 int sc_cellInit();
 int sc_cellSet(int dcell);
 int sc_cellGet(short *value);

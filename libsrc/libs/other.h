@@ -8,6 +8,12 @@
 #include "bigChars.h"
 #include "myReadKey.h"
 
+#include <signal.h>
+#include <sys/time.h>
+
+extern short operationCount;
+
+void operationCountInit();
 int printOperation();
 int inputOperation();
 int printMemory();
@@ -18,9 +24,11 @@ int printFlags();
 int printKeys();
 int printBoxBigChars();
 
-int markChosenCell( enum colors color);
+int markChosenCell(enum colors color);
 
 int loadMemory();
 int saveMemory();
+
+void runTime();
 
 #endif

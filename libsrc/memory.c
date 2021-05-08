@@ -1,33 +1,37 @@
 #include "libs/memory.h"
 
+//*********************************************************accumulator*********************************************************
 short sc_memory[100];
 short registr;
 
-short accumulator;
+short _accum;
 
-short cell;
-//*********************************************************accumulator*********************************************************
+short _cell;
 
-int sc_cellInit(){
-    cell = 0;
+int sc_cellInit()
+{
+    _cell = 0;
 }
 
-int sc_cellSet(int dcell){
-    if(((cell+dcell) < 0 )||((cell+dcell)>99)){
-    return 1;
+int sc_cellSet(int index)
+{
+    if ((index < 0) || (index > 99))
+    {
+        return 1;
     }
-    cell +=dcell;
+    _cell = index;
     return 0;
 }
 
-int sc_cellGet(short *value){
-    *value = cell;
+int sc_cellGet(short *value)
+{
+    *value = _cell;
     return 0;
 }
 
 int sc_accumulatorInit()
 {
-    accumulator = 0;
+    _accum = 0;
 }
 int sc_accumulatorSet(int value)
 {
@@ -35,13 +39,13 @@ int sc_accumulatorSet(int value)
     {
         return 1;
     }
-    accumulator = value;
+    _accum = value;
     return 0;
 }
 
 int sc_accumulatorGet(int *value)
 {
-    *value = accumulator;
+    *value = _accum;
     return 0;
 }
 //*********************************************************memory*********************************************************
