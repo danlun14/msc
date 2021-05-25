@@ -5,8 +5,10 @@
 #include "libsrc/libs/myReadKey.h"
 #include "libsrc/libs/other.h"
 
+
 int main()
 {
+<<<<<<< HEAD
     struct termios default_options;
     if (tcgetattr(STDIN_FILENO, &default_options) != 0)
     {
@@ -145,6 +147,10 @@ int main()
     //if (!tcsetattr(STDIN_FILENO, TCSAFLUSH, &default_options))
     //   return -1;
 
+=======
+    runTime();
+>>>>>>> b9177462b6221d4318e55a5651fb8d28dc263139
     mt_gotoXY(23, 0);
+    mt_clearcolor();
     return 0;
 }

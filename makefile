@@ -7,8 +7,8 @@ all: main
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	gcc -c -o $@  $<
 
-main: main.c libsrc/libs/libmemory.a libsrc/libs/libmyTerminal.a libsrc/libs/libbigChars.a libsrc/libs/libother.a libsrc/libs/libmyReadKey.a
-	gcc main.c -o main -Llibsrc/libs -lmyReadKey -lother -lbigChars -lmyTerminal -lmemory 
+main: main.c libsrc/libs/libmemory.a libsrc/libs/libmyTerminal.a libsrc/libs/libbigChars.a libsrc/libs/libother.a libsrc/libs/libmyReadKey.a libsrc/libs/libcpu.a
+	gcc main.c -o main -Llibsrc/libs -lother -lbigChars -lmyTerminal -lmemory -lmyReadKey -lcpu
 
 libsrc/libs/libmemory.a: objectsrc/memory.o
 	ar rc libsrc/libs/libmemory.a objectsrc/memory.o
@@ -24,4 +24,7 @@ libsrc/libs/libother.a: objectsrc/other.o
 
 libsrc/libs/libmyReadKey.a: objectsrc/myReadKey.o
 	ar rc libsrc/libs/libmyReadKey.a objectsrc/myReadKey.o
+
+libsrc/libs/libcpu.a: objectsrc/cpu.o
+	ar rc libsrc/libs/libcpu.a objectsrc/cpu.o
 
