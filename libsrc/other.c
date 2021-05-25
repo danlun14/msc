@@ -225,6 +225,8 @@ int printKeys()
     printf("F5 - accumulator");
     mt_gotoXY(20, 64);
     printf("F6 - instrCounter");
+    mt_gotoXY(21, 64);
+    printf("q - quit");
 
     mt_clearcolor();
     return 0;
@@ -493,10 +495,24 @@ void signalhandler(int signo)
 
         return;
     }
-    if (signo == SIGALRM)
+    else if (signo == SIGALRM)
     {
+        int tempp = 0;
+        sc_regSet(E, 1);
+        tempp = CU();
+        if (tempp == 0)
+        {
+            sc_regSet(E, 0);
+            mt_gotoXY(25, 4);
+            printf("_____________________0__________________%d", tempp);
+        }
+        else
+        {
+            mt_gotoXY(25, 4);
+            printf("_____________________1__________________%d", tempp);
+            return;
+        }
 
-        CU();
         printAccumulate();
         printOperation();
         printInstCount();

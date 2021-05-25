@@ -57,15 +57,15 @@ int CU()
     mt_gotoXY(24, 0);
 
     sc_memoryGet(_cell, &value);
-    printf("%4X\n", value);
+    // printf("%4X\n", value);
     if (sc_commandDecode(value, &command, &operand))
     {
         sc_regSet(E, 1);
         return 1;
     }
     //command = 0x40;
-    mt_gotoXY(23, 0);
-    printf("+ %02X : %02X\n", command, operand);
+    //mt_gotoXY(23, 0);
+    //printf("+ %02X : %02X\n", command, operand);
     if (command > 0x33 || command < 0x30)
     {
         switch (command)
@@ -88,7 +88,7 @@ int CU()
             break;
         case LOAD:
             sc_memoryGet(operand, &value);
-            sc_regSet(T, 1);
+            //sc_regSet(T, 1);
             _accum = value;
             break;
         case STORE:
@@ -103,34 +103,56 @@ int CU()
                 sc_regSet(E, 1);
                 break;
             }
+
             _cell = operand;
+            _cell--;
             break;
         case JNEG:
             if (_accum < 0)
             {
+                if (operand > 99 || operand < 0)
+                {
+                    sc_regSet(E, 1);
+                    break;
+                }
                 _cell = operand;
+                _cell--;
             }
             break;
         case JZ:
             if (_accum == 0)
             {
+                if (operand > 99 || operand < 0)
+                {
+                    sc_regSet(E, 1);
+                    break;
+                }
                 _cell = operand;
+                _cell--;
             }
             break;
         case JB:
             if (_accum > 0)
             {
+                if (operand > 99 || operand < 0)
+                {
+                    sc_regSet(E, 1);
+                    break;
+                }
                 _cell = operand;
+                _cell--;
             }
             break;
 
         case SET:
             _accum = operand;
+
             break;
 
         case HALT:
             return 2;
-            break;
+        default:
+            return 1;
         }
     }
     else
@@ -140,5 +162,6 @@ int CU()
             return 1;
         }
     }
+    _cell++;
     return 0;
 }
