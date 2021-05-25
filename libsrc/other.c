@@ -392,6 +392,7 @@ int loadMemory()
     mt_setfgcolor(defaultForgeGround);
     printf("l - load");
     mt_clearcolor();
+
     mt_gotoXY(23, 0);
     printf("Input filename:\n");
     fflush(stdout);
@@ -428,6 +429,7 @@ int saveMemory()
     mt_setfgcolor(defaultForgeGround);
     printf("s - save");
     mt_clearcolor();
+
     mt_gotoXY(23, 0);
     printf("Input filename:\n");
     fflush(stdout);
@@ -451,6 +453,27 @@ int saveMemory()
     mt_gotoXY(25, 0);
     printf("Succsess saving");
     mt_gotoXY(26, 0);
+    printf("Press any key to continue");
+    fflush(stdout);
+    rk_readKey(&key);
+    return 0;
+}
+
+int consoleReset()
+{
+    mt_gotoXY(18, 64);
+    mt_setbgcolor(defaultActiveBG);
+    mt_setfgcolor(defaultForgeGround);
+    printf("i - reset");
+    mt_clearcolor();
+
+    enum keys key;
+    sc_regInit();
+    sc_accumulatorInit();
+    sc_memoryInit();
+    mt_gotoXY(23, 0);
+    printf("Succsess reset");
+    mt_gotoXY(24, 0);
     printf("Press any key to continue");
     fflush(stdout);
     rk_readKey(&key);

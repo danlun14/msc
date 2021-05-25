@@ -8,7 +8,8 @@ int rk_readKey(enum keys *key)
     rk_mytermsave();
 
     char buf[6] = {0};
-    rk_mytermregime(1, 0, 1, 1, 1);
+    mt_gotoXY(23, 0);
+    rk_mytermregime(1, 0, 1, 0, 1);
 
     read(STDIN_FILENO, buf, 6);
 
@@ -73,32 +74,6 @@ int rk_readKey(enum keys *key)
 
     return 0;
 }
-
-/*int rk_mytermsave()
-{
-
-    struct termios options;
-    int fd = open("myterm.bin", O_CREAT | O_RDWR | O_TRUNC);
-
-    if (tcgetattr(STDIN_FILENO, &options) != 0)
-        return -1;
-    if (!write(fd, &options, sizeof(options)))
-        return -1;
-    return 0;
-}
-
-int rk_mytermrestore()
-{
-    struct termios options;
-    int fd = open("myterm.bin", O_RDONLY);
-
-    if (!read(fd, &options, sizeof(options)))
-        return -1;
-    if (!tcsetattr(STDIN_FILENO, TCSAFLUSH, &options))
-        return -1;
-
-    return 0;
-}*/
 int rk_mytermsave()
 {
     tcgetattr(STDIN_FILENO, &tty);

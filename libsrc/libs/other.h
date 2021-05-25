@@ -22,5 +22,6 @@ int markChosenCell(int cell, enum colors color);
 
 int loadMemory();
 int saveMemory();
+int consoleReset();
 
 #endif
