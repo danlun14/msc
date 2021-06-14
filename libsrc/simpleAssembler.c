@@ -1,6 +1,6 @@
 #include "libs/simpleAssembler.h"
 
-short memory_tmp[100];
+int memory_tmp[100];
 
 void help()
 {
@@ -55,7 +55,7 @@ int asm_string_parser(char *str, int *num_str, int *command, int *num_cell, int 
             command_[k] = str[*i];
         }
 
-        if (*i > 8)
+        if (*i > 9)
         {
             printf("Too many line numbers");
             return 1;
@@ -191,6 +191,12 @@ int asm_string_parser(char *str, int *num_str, int *command, int *num_cell, int 
 
 int asm_translate(char *path_from, char *path_where)
 {
+
+    for (int g = 0; g < 100; g++)
+    {
+        memory_tmp[g] = 0;
+    }
+
     FILE *in = fopen(path_from, "r");
 
     if (!in)
@@ -220,16 +226,15 @@ int asm_translate(char *path_from, char *path_where)
             {
                 printf(" ");
             }
-            mt_ssetbgcolor(red);
+            mt_setbgcolor(red);
             printf("^");
-            mt_stopcolor();
+            mt_clearcolor();
             printf("  Error is here\n");
 
             return 1;
         }
 
         count_lines++;
-
         if (sc_commandEncode(command, num_cell, &memory_tmp[num_line]))
         {
             printf("%d : %d : %d\n", num_line, command, num_cell);
@@ -238,17 +243,15 @@ int asm_translate(char *path_from, char *path_where)
             printf(" in %d line\n", count_lines);
             return 1;
         }
-        // printf("%d : %d : %d\n", num_line, command, num_cell);
+        int sadas;
+        printf("%d : %d : %d\n", num_line, command, num_cell);
     }
 
     fclose(in);
 
-    FILE *out = fopen(path_where, "w");
-
-    for (int i = 0; i < 100; i++)
-    {
-        fprintf(out, "%d ", memory_tmp[i]);
-    }
+    FILE *out = fopen(path_where, "wb");
+    getchar();
+    fwrite(memory_tmp, 100, sizeof(int), out);
 
     fclose(out);
 

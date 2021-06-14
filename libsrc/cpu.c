@@ -81,9 +81,12 @@ int CU()
                 sc_regSet(P, 1);
                 break;
             }
+
+            sc_memorySet(operand, tmp);
             break;
         case WRITE:
             mt_gotoXY(26 + numStrForLogs, 1);
+            sc_memoryGet(operand, &value);
             printf(">%d\n", value);
             break;
         case LOAD:

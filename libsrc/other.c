@@ -1,5 +1,6 @@
 #include "libs/other.h"
 #include "libs/cpu.h"
+#include "libs/simpleAssembler.h"
 
 int printMemory()
 {
@@ -104,6 +105,33 @@ int inputAccumulate()
     if (result != 0)
     {
         printf("Incorrect accumulator");
+    }
+    mt_gotoXY(23, 0);
+}
+
+int inputCell()
+{
+    mt_setbgcolor(defaultActiveBG);
+    mt_setfgcolor(defaultForgeGround);
+    mt_gotoXY(20, 64);
+    printf("F6 - instrCounter");
+    mt_clearcolor();
+    mt_gotoXY(23, 0);
+    printf("Input value:\n");
+    short command, operand;
+    int tv, result;
+    scanf("%2X%2X", &command, &operand);
+    tv = sc_commandEncode(command, operand, &result);
+    if (tv == 0)
+    {
+        sc_memorySet(_cell, result);
+        return 0;
+    }
+    else
+    {
+        mt_gotoXY(25, 0);
+        printf("Incorrect accumulator");
+        return 1;
     }
     mt_gotoXY(23, 0);
 }
@@ -496,65 +524,87 @@ int consoleReset()
     rk_readKey(&key);
     return 0;
 }
+
+int HALT_FLAG = 0;
+
 void signalhandler(int signo)
 {
-    int reg = 0;
-    sc_regGet(E, &reg);
-    if (reg == 1)
+    if (HALT_FLAG != 2)
     {
-        mt_clrscr();
-        printAccumulate();
-        printOperation();
-        printInstCount();
-        printFlags();
-        printKeys();
-        //fflush(stdout);
-
-        printMemory();
-        printBoxBigChars();
-
-        markChosenCell(blue);
-
-        return;
-    }
-    else if (signo == SIGALRM)
-    {
-        int tempp = 0;
-        sc_regSet(E, 1);
-        tempp = CU();
-        if (tempp == 0)
+        int reg = 0;
+        sc_regGet(E, &reg);
+        if (reg == 1)
         {
-            sc_regSet(E, 0);
-            mt_gotoXY(25, 4);
-            printf("_____________________0__________________%d", tempp);
-        }
-        else
-        {
-            mt_gotoXY(25, 4);
-            printf("_____________________1__________________%d", tempp);
+            mt_clrscr();
+            printAccumulate();
+            printOperation();
+            printInstCount();
+            printFlags();
+            printKeys();
+            //fflush(stdout);
+
+            printMemory();
+            printBoxBigChars();
+
+            markChosenCell(blue);
+
             return;
         }
+        else if (signo == SIGALRM)
+        {
+            int tempp = 0;
+            sc_regSet(E, 1);
+            HALT_FLAG = CU();
+            tempp = HALT_FLAG;
+            if (tempp == 0)
+            {
+                sc_regSet(E, 0);
+            }
+            else
+            {
+                return;
+            }
 
-        printAccumulate();
-        printOperation();
-        printInstCount();
-        printFlags();
-        printKeys();
-        mt_setfgcolor(black);
-        mt_setbgcolor(cyan);
-        mt_gotoXY(16, 64);
-        printf("r - run");
-        mt_clearcolor();
-        //fflush(stdout);
+            printAccumulate();
+            printOperation();
+            printInstCount();
+            printFlags();
+            printKeys();
+            mt_setfgcolor(black);
+            mt_setbgcolor(cyan);
+            mt_gotoXY(16, 64);
+            printf("r - run");
+            mt_clearcolor();
+            //fflush(stdout);
 
-        printMemory();
-        printBoxBigChars();
+            printMemory();
+            printBoxBigChars();
 
-        markChosenCell(green);
+            markChosenCell(green);
+        }
     }
 }
 void step()
 {
+    int tempp = 0;
+    sc_regSet(E, 1);
+    tempp = CU();
+    if (tempp == 0)
+    {
+        sc_regSet(E, 0);
+    }
+    else
+    {
+        return;
+    }
+    printAccumulate();
+    printOperation();
+    printInstCount();
+    printFlags();
+    printKeys();
+
+    printMemory();
+    printBoxBigChars();
 }
 void runTime()
 {
@@ -590,8 +640,8 @@ void runTime()
     sc_accumulatorInit();
     operationCountInit();
     sc_regInit();
-    sc_memoryInit();
     int command = 0, operand = 0, value = 0;
+    /*
     sc_commandEncode(0x40, 5, &value);
     sc_memorySet(0, value);
 
@@ -602,7 +652,215 @@ void runTime()
     sc_memorySet(22, 0x1520);
 
     sc_commandDecode(value, &command, &operand);
+    */
     short instCount = 0;
+
+    setitimer(ITIMER_REAL, &nval, &oval);
+    enum keys key;
+
+    enum colors setup_color = blue;
+    enum colors currient_color = blue;
+    while (1)
+    {
+        //mt_clrscr();
+        printAccumulate();
+        printOperation();
+        printInstCount();
+        printFlags();
+        printKeys();
+        printMemory();
+        printBoxBigChars();
+
+        markChosenCell(currient_color);
+
+        currient_color = setup_color;
+        mt_gotoXY(23, 0);
+        //mt_gotoXY(24,0);
+        rk_readKey(&key);
+        nval.it_interval.tv_sec = 0;
+        nval.it_interval.tv_usec = 0;
+        nval.it_value.tv_sec = 0;
+        nval.it_value.tv_usec = 0;
+
+        setitimer(ITIMER_REAL, &nval, &oval);
+
+        sc_regSet(E, 0);
+        HALT_FLAG = 0;
+        fflush(stdout);
+        //tcsetattr(STDIN_FILENO, TCSAFLUSH, &default_options);
+        if (key == 'q')
+        {
+            break;
+        }
+        else if (key == RIGHT)
+        {
+            if (sc_cellSet(_cell + 1) == 0)
+            {
+            }
+            else
+            {
+                currient_color = red;
+            }
+            sc_cellGet(&instCount);
+        }
+        else if (key == LEFT)
+        {
+            if (sc_cellSet(_cell - 1) == 0)
+            {
+            }
+            else
+            {
+                currient_color = red;
+            }
+            sc_cellGet(&instCount);
+        }
+        else if (key == UP)
+        {
+            if (sc_cellSet(_cell - 10) == 0)
+            {
+            }
+            else
+            {
+                currient_color = red;
+            }
+            sc_cellGet(&instCount);
+        }
+        else if (key == DOWN)
+        {
+            if (sc_cellSet(_cell + 10) == 0)
+            {
+            }
+            else
+            {
+                currient_color = red;
+            }
+            sc_cellGet(&instCount);
+        }
+        else if (key == F5)
+        {
+            inputAccumulate();
+            mt_clrscr();
+        }
+        else if (key == F6)
+        {
+            inputCell();
+            mt_clrscr();
+        }
+        else if (key == 'l')
+        {
+            loadMemory();
+            mt_clrscr();
+        }
+        else if (key == 'r')
+        {
+            int reg = 0;
+            sc_regGet(E, &reg);
+            if (reg != 1)
+            {
+                nval.it_interval.tv_sec = 1;
+                nval.it_value.tv_sec = 1;
+                //sigaction(ITIMER_REAL, &act, NULL);
+                setitimer(ITIMER_REAL, &nval, &oval);
+            }
+            //rk_readKey(&key);
+        }
+        else if (key == 's')
+        {
+            saveMemory();
+            mt_clrscr();
+        }
+        else if (key == 't')
+        {
+            mt_gotoXY(17, 64);
+            mt_setbgcolor(defaultActiveBG);
+            mt_setfgcolor(defaultForgeGround);
+            printf("t - step");
+            mt_clearcolor();
+            step();
+            mt_gotoXY(23, 0);
+
+            fflush(stdout);
+
+            rk_readKey(&key);
+            //mt_clrscr();
+        }
+        else if (key == 'i')
+        {
+            mt_gotoXY(18, 64);
+            mt_gotoXY(17, 64);
+            mt_setbgcolor(defaultActiveBG);
+            mt_setfgcolor(defaultForgeGround);
+            printf("i - reset");
+
+            sc_regInit();
+            sc_memoryInit();
+            //inputAccumulate();
+            mt_gotoXY(23, 0);
+
+            printf("Sucsessfull reset! Press any key to continue");
+            fflush(stdout);
+            rk_readKey(&key);
+
+            mt_clrscr();
+        }
+        //mt_clearcolor();
+    }
+    //rk_mytermregime(0, 0, 0, 0, 0);
+    //rk_mytermrestore();
+
+    //if (!tcsetattr(STDIN_FILENO, TCSAFLUSH, &default_options))
+}
+
+void runTimeAsm()
+{
+
+    struct termios default_options;
+    if (tcgetattr(STDIN_FILENO, &default_options) != 0)
+    {
+        return;
+    }
+    sc_memoryInit();
+    sc_memoryLoad("asm.bin");
+    struct sigaction act;
+    act.sa_handler = &signalhandler;
+    act.sa_flags = SA_RESTART;
+
+    sigemptyset(&act.sa_mask);
+
+    sigaction(SIGALRM, &act, NULL);
+
+    struct itimerval nval, oval;
+
+    //signal(SIGALRM, signalhandler);
+
+    nval.it_interval.tv_sec = 0;
+    nval.it_interval.tv_usec = 0;
+    nval.it_value.tv_sec = 0;
+    nval.it_value.tv_usec = 0;
+
+    setitimer(ITIMER_REAL, &nval, &oval);
+    //    while(1){
+    //    }
+
+    mt_clrscr();
+    sc_accumulatorInit();
+    operationCountInit();
+    sc_regInit();
+    int command = 0, operand = 0, value = 0;
+    /*
+    sc_commandEncode(0x40, 5, &value);
+    sc_memorySet(0, value);
+
+    sc_commandEncode(LOAD, 22, &value);
+    sc_memorySet(5, value);
+
+    sc_commandEncode(0x2F, 0x37, &value);
+    sc_memorySet(22, 0x1520);
+
+    sc_commandDecode(value, &command, &operand);
+    */
+    short instCount = 0;
+
     setitimer(ITIMER_REAL, &nval, &oval);
     enum keys key;
 
@@ -689,6 +947,8 @@ void runTime()
         }
         else if (key == F6)
         {
+            inputCell();
+            mt_clrscr();
         }
         else if (key == 'l')
         {
@@ -724,9 +984,6 @@ void runTime()
             mt_gotoXY(23, 0);
 
             fflush(stdout);
-
-            rk_readKey(&key);
-            mt_clrscr();
         }
         else if (key == 'i')
         {
@@ -755,6 +1012,60 @@ void runTime()
 
     //if (!tcsetattr(STDIN_FILENO, TCSAFLUSH, &default_options))
 }
+
+int m_strcmp(char *s1, char *s2)
+{
+    int check = 0;
+    for (int i = 0; isalpha(s1[i]) && isalpha(s2[i]); i++)
+    {
+        if (s1[i] == s2[i])
+        {
+            check++;
+        }
+        else
+        {
+            check = 0;
+            break;
+        }
+    }
+
+    return check;
+}
+
+int get_command_asm(char *command)
+{
+    if (m_strcmp(command, "READ"))
+        return READ;
+    if (m_strcmp(command, "WRITE"))
+        return WRITE;
+    if (m_strcmp(command, "LOAD"))
+        return LOAD;
+    if (m_strcmp(command, "STORE"))
+        return STORE;
+    if (m_strcmp(command, "ADD"))
+        return ADD;
+    if (m_strcmp(command, "SUB"))
+        return SUB;
+    if (m_strcmp(command, "DIVIDE"))
+        return DIVIDE;
+    if (m_strcmp(command, "MUL"))
+        return MUL;
+    if (m_strcmp(command, "JUMP"))
+        return JUMP;
+    if (m_strcmp(command, "JNEG"))
+        return JNEG;
+    if (m_strcmp(command, "JZ"))
+        return JZ;
+    if (m_strcmp(command, "JB"))
+        return JB;
+    if (m_strcmp(command, "SET"))
+        return SET;
+    if (m_strcmp(command, "HALT"))
+        return HALT;
+
+    return 1;
+}
+
 short operationCount;
 void operationCountInit()
 {

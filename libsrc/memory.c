@@ -1,7 +1,7 @@
 #include "libs/memory.h"
 
 //*********************************************************accumulator*********************************************************
-short sc_memory[100];
+int sc_memory[100];
 short registr;
 
 short _accum;
@@ -51,6 +51,7 @@ int sc_accumulatorGet(int *value)
 //*********************************************************memory*********************************************************
 int sc_memoryInit()
 {
+
     for (int i = 0; i < 100; i++)
     {
         sc_memory[i] = 0;
@@ -60,7 +61,7 @@ int sc_memoryInit()
 
 int sc_memorySet(int address, int value)
 {
-    if ((address >= 99) || (address < 0))
+    if ((address > 99) || (address < 0))
     {
         sc_regSet(P, 1);
         return -1;
@@ -85,10 +86,9 @@ int sc_memorySave(char *filename)
     FILE *ptrFile = fopen(filename, "wb");
     if (ptrFile == NULL)
     {
-
         return -1;
     }
-    fwrite(sc_memory, 100, sizeof(short), ptrFile); // записать в файл содержимое буфера
+    fwrite(sc_memory, 100, sizeof(int), ptrFile); // записать в файл содержимое буфера
     fclose(ptrFile);
     return 0;
 }
@@ -99,7 +99,7 @@ int sc_memoryLoad(char *filename)
     {
         return -1;
     }
-    fread(sc_memory, 100, sizeof(short), ptrFile);
+    fread(sc_memory, 100, sizeof(int), ptrFile);
     fclose(ptrFile);
     return 0;
 }
@@ -153,14 +153,14 @@ int sc_regGet(int flag, int *value) //0b 0/1 0 1000101 0100110
 
 //*********************************************************decode encode *********************************************************
 
-int sc_commandEncode(int command, int operand, int *value)
+int sc_commandEncode(int command, int operand, short *value)
 {
     if ((command > 0x7F) || (command < 0))
     {
         sc_regSet(P, 1);
         return -1;
     }
-    if ((operand > 0x7F) || (operand < 0))
+    if ((operand > 0x63) || (operand < 0))
     {
         sc_regSet(P, 1);
         return -1;
@@ -190,7 +190,7 @@ int sc_commandDecode(int value, int *command, int *operand)
     }
     int temp1 = temp;
     temp = operandMask & value;
-    if ((temp > 0x7F) || (temp < 0))
+    if ((temp > 0x63) || (temp < 0))
     {
         sc_regSet(P, 1);
         return -1;

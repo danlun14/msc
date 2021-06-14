@@ -8,9 +8,11 @@
 #include "bigChars.h"
 #include "myReadKey.h"
 
+#include <ctype.h>
+
 #include <signal.h>
 #include <sys/time.h>
-
+#include <math.h>
 extern short operationCount;
 
 void operationCountInit();
@@ -31,5 +33,8 @@ int saveMemory();
 int consoleReset();
 
 void runTime();
+void runTimeAsm();
+int get_command_asm(char *command);
 
+int m_strcmp(char *s1, char *s2);
 #endif

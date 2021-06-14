@@ -4,11 +4,15 @@
 #include "libsrc/libs/bigChars.h"
 #include "libsrc/libs/myReadKey.h"
 #include "libsrc/libs/other.h"
+#include "libsrc/libs/simpleAssembler.h"
 
 int main()
 {
-    sc_memoryLoad("");
-    runTime();
+
+    asm_translate("test.asm", "asm.bin");
+    int value = 0;
+    getchar();
+    runTimeAsm();
     mt_gotoXY(23, 0);
     mt_clearcolor();
     return 0;
