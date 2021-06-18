@@ -157,10 +157,8 @@ int asm_string_parser(char *str, int *num_str, int *command, int *num_cell, int 
 
     if (isMinus == 2)
     {
-        // printf("che\n");
         if ((*num_cell) < 65535)
         {
-            // printf("che1\n");
             memory_tmp[*num_str] = *num_cell;
         }
         else
@@ -183,8 +181,6 @@ int asm_string_parser(char *str, int *num_str, int *command, int *num_cell, int 
         }
         *command = 0;
     }
-
-    // free(command_); // TODO: why dont work?
 
     return 0;
 }
@@ -243,7 +239,6 @@ int asm_translate(char *path_from, char *path_where)
             printf(" in %d line\n", count_lines);
             return 1;
         }
-        int sadas;
         printf("%d : %d : %d\n", num_line, command, num_cell);
     }
 

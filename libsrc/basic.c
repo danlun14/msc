@@ -328,11 +328,11 @@ int basic_translator(char *path_from, char *path_where, int *i_)
 
                             if (pull_commands[real_line].num_line < 10)
                             {
-                                sprintf(pull_commands[real_line].str, "%s0%d JZ %d", pull_commands[real_line].str, pull_commands[real_line].num_line, num_line_to_ass);
+                                sprintf(pull_commands[real_line].str, "%s0%d JB %d", pull_commands[real_line].str, pull_commands[real_line].num_line, num_line_to_ass);
                             }
                             else
                             {
-                                sprintf(pull_commands[real_line].str, "%s%d JZ %d", pull_commands[real_line].str, pull_commands[real_line].num_line, num_line_to_ass);
+                                sprintf(pull_commands[real_line].str, "%s%d JB %d", pull_commands[real_line].str, pull_commands[real_line].num_line, num_line_to_ass);
                             }
                             now_lines += 2;
                         }
@@ -395,11 +395,11 @@ int basic_translator(char *path_from, char *path_where, int *i_)
 
                             if (pull_commands[real_line].num_line < 10)
                             {
-                                sprintf(pull_commands[real_line].str, "%s0%d JZ %d", pull_commands[real_line].str, pull_commands[real_line].num_line, num_line_to_ass);
+                                sprintf(pull_commands[real_line].str, "%s0%d JNEG %d", pull_commands[real_line].str, pull_commands[real_line].num_line, num_line_to_ass);
                             }
                             else
                             {
-                                sprintf(pull_commands[real_line].str, "%s%d JZ %d", pull_commands[real_line].str, pull_commands[real_line].num_line, num_line_to_ass);
+                                sprintf(pull_commands[real_line].str, "%s%d JNEG %d", pull_commands[real_line].str, pull_commands[real_line].num_line, num_line_to_ass);
                             }
                             now_lines += 2;
                         }
@@ -518,7 +518,7 @@ int basic_translator(char *path_from, char *path_where, int *i_)
         now_lines++;
         real_line++;
     }
-    printf("%d\n", now_lines);
+
     // int amount_vars = get_amount_vars()
 
     for (int j = 0; j < real_line; j++)
@@ -788,11 +788,11 @@ int basic_translator(char *path_from, char *path_where, int *i_)
             now_lines = temp;
         }
     }
-    printf("%d\n", real_line);
 
     for (int j = 0; j < real_line; j++)
     {
         fprintf(out, "%s", pull_commands[j].str);
+        printf("command - %d == %d\n", pull_commands[j].num_line, pull_commands[j].command);
         if (j != real_line - 1)
         {
             fprintf(out, "\n");
@@ -847,6 +847,10 @@ int add_var(char name_, int num_cell_)
         var *prev;
         while (tmp != NULL)
         {
+            if (tmp->name == name_)
+            {
+                return 0;
+            }
             prev = tmp;
             tmp = tmp->next;
         }
@@ -1044,7 +1048,7 @@ int basic_translator_if(char *buf, char *oper_a, char *oper_b, int *operation, i
     {
         if (buf[*i] == '\0' || buf[*i] == '\n')
         {
-            printf("Error\n");
+            printf("Error. Need number after GOTO\n");
             return 1;
         }
     }
@@ -1147,7 +1151,7 @@ int basic_translator_let(char *buf, unit_command *command, int *i_)
     {
         if (add_var(var_where_store, get_cellNumberForNewVariables()))
         {
-            printf("Sorry \n");
+            printf("Error creating variable\n");
             return 1;
         }
         var_store = get_var(var_where_store);
@@ -1334,7 +1338,7 @@ int basic_translator_let(char *buf, unit_command *command, int *i_)
                 {
                     if (add_var(oper_b, get_cellNumberForNewVariables()))
                     {
-                        printf("Sorry \n");
+                        printf("Error creating variable\n");
                         return 1;
                     }
                     var_a = get_var(oper_b);
@@ -1349,7 +1353,7 @@ int basic_translator_let(char *buf, unit_command *command, int *i_)
                 }
             }
             else if (isdigit(oper_b))
-            { // TODO
+            {
                 if (command->num_line < 10)
                 {
                     sprintf(command->str, "%s0%d SET %c\n", command->str, command->num_line, oper_b);
@@ -1411,7 +1415,7 @@ int basic_translator_let(char *buf, unit_command *command, int *i_)
                 }
             }
             else if (isdigit(oper_a))
-            { // TODO
+            {
                 int temp_num_cell = get_num_line_for_tmp_var();
                 if (temp_num_cell < 10)
                 {
